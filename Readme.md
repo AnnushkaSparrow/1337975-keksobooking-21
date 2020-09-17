@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Аннушка](https://up.htmlacademy.ru/javascript/21/user/1337975).
-* Наставник: `Ася Аникина`.
+* Наставник: `Ася Аникина` (https://htmlacademy.ru/profile/sedside).
 
 ---
 
