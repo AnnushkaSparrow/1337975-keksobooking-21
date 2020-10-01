@@ -7,13 +7,13 @@ const PRICES = [2500, 6700, 1200, 4600, 3500];
 const TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const ROOMS = [1, 2, 3, 4];
 const GUESTS = [1, 2, 3, 4, 5];
-const CHECK_IN = [`12:00`, `13:00`,`14:00`];
-const CHECK_OUT = [`12:00`, `13:00`,`14:00`];
+const CHECK_IN = [`12:00`, `13:00`, `14:00`];
+const CHECK_OUT = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const DESCRIPTIONS = [`Уютная и комфортная квартира только для вас`, `Сдам дом на долгий срок`, `Сдам бунгало молодой паре`];
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 const COORDINATE_X_MIN = 100;
-const COORDINATE_X_MAX = document.querySelector(`.map`).offsetWidth-100;
+const COORDINATE_X_MAX = document.querySelector(`.map`).offsetWidth - 100;
 const COORDINATE_Y_MIN = 130;
 const COORDINATE_Y_MAX = 630;
 
@@ -23,7 +23,7 @@ map.classList.remove(`map--faded`);
 
 
 const getRandomNumber = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) ) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 const getRandomElementOfArray = (arr) => {
@@ -35,11 +35,11 @@ const getRandomItemsWithoutRepeat = (arr) => {
   const copyArr = arr.slice();
   let newArr = [];
 
-  for(let i = 0; i < getRandomNumber(1, arr.length); i++) {
+  for (let i = 0; i < getRandomNumber(1, arr.length); i++) {
     let idx = Math.floor(Math.random() * copyArr.length);
     newArr.push(copyArr[idx]);
     copyArr.splice(idx, 1);
-  };
+  }
   return newArr;
 };
 
@@ -66,13 +66,13 @@ const getAd = (img, titleInAd, locationX, locationY, priceInAd, typeInAd, roomsI
       y: getRandomNumber(coordinateYMin, coordinateYMax)
     }
   };
-return AdDescription;
+  return AdDescription;
 };
 
 const getArrayOfAds = (index) => {
-   let itemOfArray = [];
-  for(let i=0; i<index; i++) {
-   itemOfArray[i] = getAd(AVATARS[i], TITLES[i], LOCATION_X, LOCATION_Y, PRICES, TYPES, ROOMS, GUESTS, CHECK_IN, CHECK_OUT, FEATURES, DESCRIPTIONS, PHOTOS, COORDINATE_X_MIN, COORDINATE_X_MAX, COORDINATE_Y_MIN, COORDINATE_Y_MAX);
+  let itemOfArray = [];
+  for (let i = 0; i < index; i++) {
+    itemOfArray[i] = getAd(AVATARS[i], TITLES[i], LOCATION_X, LOCATION_Y, PRICES, TYPES, ROOMS, GUESTS, CHECK_IN, CHECK_OUT, FEATURES, DESCRIPTIONS, PHOTOS, COORDINATE_X_MIN, COORDINATE_X_MAX, COORDINATE_Y_MIN, COORDINATE_Y_MAX);
   }
   return itemOfArray;
 };
@@ -95,8 +95,5 @@ for (let i = 0; i < 8; i++) {
 }
 
 listOfPins.appendChild(fragment);
-
-
-
 
 
