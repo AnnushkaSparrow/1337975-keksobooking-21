@@ -88,12 +88,12 @@ const renderPin = (add) => {
 };
 const addFragment = () => {
   const fragment = document.createDocumentFragment();
-for (let i = 0; i < 8; i++) {
-  fragment.appendChild(renderPin(getArrayOfAds(8)[i]));
-}
+  for (let i = 0; i < 8; i++) {
+    fragment.appendChild(renderPin(getArrayOfAds(8)[i]));
+  }
 
-listOfPins.appendChild(fragment);
-}
+  listOfPins.appendChild(fragment);
+};
 // -------------------------------------------------------------------------------------------
 const adForm = document.querySelector(`.ad-form`);
 const inputs = adForm.querySelectorAll(`fieldset`);
@@ -106,41 +106,41 @@ const guestsSelect = document.querySelector(`#capacity`);
 
 const getOptions = (value) => {
   switch (value) {
-    case '1': return ['для 1 гостя'];
-    case '2': return ['для 1 гостя', 'для 2 гостей'];
-    case '3': return ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'];
-    case '100': return ['не для гостей'];
+    case `1`: return [`для 1 гостя`];
+    case `2`: return [`для 1 гостя`, `для 2 гостей`];
+    case `3`: return [`для 1 гостя`, `для 2 гостей`, `для 3 гостей`];
+    case `100`: return [`не для гостей`];
     default: return [];
   }
 };
 
 
 const syncRoomsToGuests = (roomsNumber) => {
-  guestsSelect.innerHTML = '';
+  guestsSelect.innerHTML = ``;
   const options = getOptions(roomsNumber);
 
   options.forEach((option, index) => {
-    const optionNode = document.createElement('option');
+    const optionNode = document.createElement(`option`);
     optionNode.value = `${index + 1}`;
     optionNode.innerHTML = option;
     guestsSelect.appendChild(optionNode);
-  })
-  guestsSelect.value = (options.length > 0) ? '1' : null;
+  });
+  guestsSelect.value = (options.length > 0) ? `1` : null;
 };
 
 syncRoomsToGuests(roomsSelect.value);
 
 
-const setUpAttributes = (arrOfTags, attribute, valueOfAttribute) =>
-{  arrOfTags.forEach((e, index) => {
-  arrOfTags[index].setAttribute(attribute, valueOfAttribute);
-});
+const setUpAttributes = (arrOfTags, attribute, valueOfAttribute) => {
+  arrOfTags.forEach((e, index) => {
+    arrOfTags[index].setAttribute(attribute, valueOfAttribute);
+  });
 };
 
-const deleteAttributes = (arr, attribute) =>
-{  arr.forEach((e, index) => {
-  arr[index].removeAttribute(attribute);
-});
+const deleteAttributes = (arr, attribute) => {
+  arr.forEach((e, index) => {
+    arr[index].removeAttribute(attribute);
+  });
 };
 
 
@@ -153,7 +153,7 @@ const setActivePage = () => {
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
   address.setAttribute(`value`, `${COORDINATE_MAIN_PIN_X + WIDTH_MAIN_PIN / 2}, ${COORDINATE_MAIN_PIN_Y + HEIGHT_MAIN_PIN}`);
-  roomsSelect.addEventListener('change', (evt) => {
+  roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
     syncRoomsToGuests(value);
@@ -161,14 +161,12 @@ const setActivePage = () => {
 };
 
 const onMainPinMousedownPress = (evt) => {
-  if(evt.button === 0) {
-    setActivePage();
-  }
+  return evt.button === 0 && setActivePage();
 };
 
 
 const onMainPinEnterPress = (evt) => {
-  evt.key === `Enter` &&  setActivePage();
+  return evt.key === `Enter` && setActivePage();
 };
 
 // неактивное состояния
@@ -176,11 +174,6 @@ setUpAttributes(inputs, `disabled`, `disabled`);
 setUpAttributes(selects, `disabled`, `disabled`);
 address.setAttribute(`value`, `${COORDINATE_MAIN_PIN_X + WIDTH_MAIN_PIN / 2}, ${COORDINATE_MAIN_PIN_Y + HEIGHT_SMALL_MAIN_PIN / 2}`);
 
-
-
 // активное состояние
 mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
 mainPin.addEventListener(`keydown`, onMainPinEnterPress);
-
-
-
