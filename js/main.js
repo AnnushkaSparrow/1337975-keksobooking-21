@@ -22,6 +22,7 @@ const HEIGHT_MAIN_PIN = 84;
 const HEIGHT_SMALL_MAIN_PIN = 62;
 const COORDINATE_MAIN_PIN_X = 570;
 const COORDINATE_MAIN_PIN_Y = 375;
+const NUMBER_OF_ADS = 8;
 
 
 const map = document.querySelector(`.map`);
@@ -86,10 +87,11 @@ const renderPin = (add) => {
 
   return clonePinTemplate;
 };
-const addFragment = () => {
+
+const addFragmentOfRenderPins = () => {
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < 8; i++) {
-    fragment.appendChild(renderPin(getArrayOfAds(8)[i]));
+  for (let i = 0; i < NUMBER_OF_ADS; i++) {
+    fragment.appendChild(renderPin(getArrayOfAds(NUMBER_OF_ADS)[i]));
   }
 
   listOfPins.appendChild(fragment);
@@ -143,16 +145,18 @@ const deleteAttributes = (arr, attribute) => {
   });
 };
 
+const setAddress = (x, width, y, height) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
+
 
 const setActivePage = () => {
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
   deleteAttributes(inputs, `disabled`);
   deleteAttributes(selects, `disabled`);
-  addFragment();
+  addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  address.setAttribute(`value`, `${COORDINATE_MAIN_PIN_X + WIDTH_MAIN_PIN / 2}, ${COORDINATE_MAIN_PIN_Y + HEIGHT_MAIN_PIN}`);
+  setAddress(COORDINATE_MAIN_PIN_X, WIDTH_MAIN_PIN / 2, COORDINATE_MAIN_PIN_Y, HEIGHT_MAIN_PIN);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
@@ -160,19 +164,14 @@ const setActivePage = () => {
   });
 };
 
-const onMainPinMousedownPress = (evt) => {
-  return evt.button === 0 && setActivePage();
-};
+const onMainPinMousedownPress = (evt) => evt.button === 0 && setActivePage();
 
-
-const onMainPinEnterPress = (evt) => {
-  return evt.key === `Enter` && setActivePage();
-};
+const onMainPinEnterPress = (evt) => evt.key === `Enter` && setActivePage();
 
 // неактивное состояния
 setUpAttributes(inputs, `disabled`, `disabled`);
 setUpAttributes(selects, `disabled`, `disabled`);
-address.setAttribute(`value`, `${COORDINATE_MAIN_PIN_X + WIDTH_MAIN_PIN / 2}, ${COORDINATE_MAIN_PIN_Y + HEIGHT_SMALL_MAIN_PIN / 2}`);
+setAddress(COORDINATE_MAIN_PIN_X, WIDTH_MAIN_PIN / 2, COORDINATE_MAIN_PIN_Y, (HEIGHT_SMALL_MAIN_PIN / 2));
 
 // активное состояние
 mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
