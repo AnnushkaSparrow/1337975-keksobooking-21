@@ -148,7 +148,7 @@ const deleteAttributes = (arr, attribute) => {
 
 
 
-const setAddress = (x, y,  height=HEIGHT_MAIN_PIN,  width=WIDTH_MAIN_PIN / 2);
+const setAddress = (x, y, height=HEIGHT_MAIN_PIN,  width=WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);;
 
 
 const setActivePage = () => {
