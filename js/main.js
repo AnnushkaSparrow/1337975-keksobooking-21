@@ -145,7 +145,13 @@ const deleteAttributes = (arr, attribute) => {
   });
 };
 
-const setAddress = (x, width, y, height) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
+const parametersOfAddress = {
+  x: COORDINATE_MAIN_PIN_X,
+  width: WIDTH_MAIN_PIN / 2,
+  y: COORDINATE_MAIN_PIN_Y
+};
+
+const setAddress = ({x, width, y}, height) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
 
 
 const setActivePage = () => {
@@ -156,7 +162,7 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  setAddress(COORDINATE_MAIN_PIN_X, WIDTH_MAIN_PIN / 2, COORDINATE_MAIN_PIN_Y, HEIGHT_MAIN_PIN);
+  setAddress(parametersOfAddress, HEIGHT_MAIN_PIN);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
@@ -171,7 +177,7 @@ const onMainPinEnterPress = (evt) => evt.key === `Enter` && setActivePage();
 // неактивное состояния
 setUpAttributes(inputs, `disabled`, `disabled`);
 setUpAttributes(selects, `disabled`, `disabled`);
-setAddress(COORDINATE_MAIN_PIN_X, WIDTH_MAIN_PIN / 2, COORDINATE_MAIN_PIN_Y, (HEIGHT_SMALL_MAIN_PIN / 2));
+setAddress(parametersOfAddress, (HEIGHT_SMALL_MAIN_PIN / 2));
 
 // активное состояние
 mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
