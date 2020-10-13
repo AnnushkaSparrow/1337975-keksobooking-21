@@ -146,9 +146,7 @@ const deleteAttributes = (arr, attribute) => {
   });
 };
 
-
-
-const setAddress = (x, y, height=HEIGHT_MAIN_PIN,  width=WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);;
+const setAddress = (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
 
 
 const setActivePage = () => {
@@ -177,8 +175,7 @@ const onMainPinEnterPress = (evt) => evt.key === `Enter` && setActivePage();
 // неактивное состояния
 setUpAttributes(inputs, `disabled`, `disabled`);
 setUpAttributes(selects, `disabled`, `disabled`);
-
-  setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y, HEIGHT_SMALL_MAIN_PIN / 2 );
+setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y, HEIGHT_SMALL_MAIN_PIN / 2);
 
 // активное состояние
 mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
