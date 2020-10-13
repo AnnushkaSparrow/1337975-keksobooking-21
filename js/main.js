@@ -15,13 +15,17 @@ const COORDINATE_X_MIN = 100;
 const COORDINATE_X_MAX = document.querySelector(`.map`).offsetWidth - 100;
 const COORDINATE_Y_MIN = 130;
 const COORDINATE_Y_MAX = 630;
-const WIDTH_PIN = 40;
-const HEIGHT_PIN = 40;
+const WIDTH_PIN = 50;
+const HEIGHT_PIN = 70;
+const WIDTH_MAIN_PIN = 62;
+const HEIGHT_MAIN_PIN = 84;
+const HEIGHT_SMALL_MAIN_PIN = 62;
+const COORDINATE_MAIN_PIN_X = 570;
+const COORDINATE_MAIN_PIN_Y = 375;
+const NUMBER_OF_ADS = 8;
 
 
 const map = document.querySelector(`.map`);
-map.classList.remove(`map--faded`);
-
 
 const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -84,9 +88,95 @@ const renderPin = (add) => {
   return clonePinTemplate;
 };
 
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < 8; i++) {
-  fragment.appendChild(renderPin(getArrayOfAds(8)[i]));
-}
+const addFragmentOfRenderPins = () => {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < NUMBER_OF_ADS; i++) {
+    fragment.appendChild(renderPin(getArrayOfAds(NUMBER_OF_ADS)[i]));
+  }
 
-listOfPins.appendChild(fragment);
+  listOfPins.appendChild(fragment);
+};
+
+// -------------------------------------------------------------------------------------------
+const adForm = document.querySelector(`.ad-form`);
+const inputs = adForm.querySelectorAll(`fieldset`);
+const selects = document.querySelectorAll(`select`);
+const mainPin = document.querySelector(`.map__pin--main`);
+const address = document.querySelector(`#address`);
+const roomsSelect = document.querySelector(`#room_number`);
+const guestsSelect = document.querySelector(`#capacity`);
+
+
+const getOptions = (value) => {
+  switch (value) {
+    case `1`: return [`для 1 гостя`];
+    case `2`: return [`для 1 гостя`, `для 2 гостей`];
+    case `3`: return [`для 1 гостя`, `для 2 гостей`, `для 3 гостей`];
+    case `100`: return [`не для гостей`];
+    default: return [];
+  }
+};
+
+
+const syncRoomsToGuests = (roomsNumber) => {
+  guestsSelect.innerHTML = ``;
+  const options = getOptions(roomsNumber);
+
+  options.forEach((option, index) => {
+    const optionNode = document.createElement(`option`);
+    optionNode.value = `${index + 1}`;
+    optionNode.innerHTML = option;
+    guestsSelect.appendChild(optionNode);
+  });
+  guestsSelect.value = (options.length > 0) ? `1` : null;
+};
+
+syncRoomsToGuests(roomsSelect.value);
+
+
+const setUpAttributes = (arrOfTags, attribute, valueOfAttribute) => {
+  arrOfTags.forEach((e, index) => {
+    arrOfTags[index].setAttribute(attribute, valueOfAttribute);
+  });
+};
+
+const deleteAttributes = (arr, attribute) => {
+  arr.forEach((e, index) => {
+    arr[index].removeAttribute(attribute);
+  });
+};
+
+const setAddress = (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
+
+
+const setActivePage = () => {
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+  deleteAttributes(inputs, `disabled`);
+  deleteAttributes(selects, `disabled`);
+  addFragmentOfRenderPins();
+  mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
+  mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
+
+  setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
+  roomsSelect.addEventListener(`change`, (evt) => {
+    const value = evt.target.value;
+    roomsSelect.value = value;
+    syncRoomsToGuests(value);
+  });
+
+
+};
+
+const onMainPinMousedownPress = (evt) => evt.button === 0 && setActivePage();
+
+const onMainPinEnterPress = (evt) => evt.key === `Enter` && setActivePage();
+
+// неактивное состояния
+setUpAttributes(inputs, `disabled`, `disabled`);
+setUpAttributes(selects, `disabled`, `disabled`);
+setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y, HEIGHT_SMALL_MAIN_PIN / 2);
+
+// активное состояние
+mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
+mainPin.addEventListener(`keydown`, onMainPinEnterPress);
