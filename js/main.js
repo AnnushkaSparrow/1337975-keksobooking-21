@@ -97,6 +97,76 @@ const addFragmentOfRenderPins = () => {
   listOfPins.appendChild(fragment);
 };
 
+// -------------------------------------------------------------------------------------------------------------
+const types = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalo: `Бунгало`
+};
+
+const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+const filters = document.querySelector(`.map__filters-container`);
+
+const popupPhoto = cardTemplate.querySelector(`.popup__photo`);
+
+const createFeatureFragment = (add) => {
+  const featureFragment = document.createDocumentFragment();
+  add.offer.features.forEach((feature) => {
+    const featureItem = document.createElement(`li`);
+    featureItem.className = `popup__feature popup__feature--` + feature;
+    featureFragment.appendChild(featureItem);
+  });
+  return featureFragment;
+};
+
+const createPhotosFragment = (add) => {
+  const photosFragment = document.createDocumentFragment();
+  add.offer.photos.forEach((photo) => {
+    const popupPhotoItem = popupPhoto.cloneNode(true);
+    popupPhotoItem.src = photo;
+    photosFragment.appendChild(popupPhotoItem);
+  });
+  return photosFragment;
+};
+
+const renderCard = (add) => {
+  const cloneCardTemplate = cardTemplate.cloneNode(true);
+  cloneCardTemplate.querySelector(`.popup__title`).textContent = add.offer.title;
+  cloneCardTemplate.querySelector(`.popup__text--address`).textContent = add.offer.address;
+  cloneCardTemplate.querySelector(`.popup__text--price`).textContent = `${add.offer.price}₽/ночь`;
+  cloneCardTemplate.querySelector(`.popup__type`).textContent = types[add.offer.type];
+  cloneCardTemplate.querySelector(`.popup__text--capacity`).textContent = `${add.offer.rooms} комнаты для ${add.offer.guests} гостей`;
+  cloneCardTemplate.querySelector(`.popup__text--time`).textContent = `Заезд после ${add.offer.checkin}, выезд до ${add.offer.checkout}`;
+  cloneCardTemplate.querySelector(`.popup__features`).innerHTML = ``;
+  cloneCardTemplate.querySelector(`.popup__features`).appendChild(createFeatureFragment(add));
+  cloneCardTemplate.querySelector(`.popup__description`).textContent = add.offer.description;
+  cloneCardTemplate.querySelector(`.popup__photos`).removeChild(cloneCardTemplate.querySelector(`.popup__photo`));
+  cloneCardTemplate.querySelector(`.popup__photos`).appendChild(createPhotosFragment(add));
+  cloneCardTemplate.querySelector(`.popup__avatar`).src = add.author.avatar;
+
+  const description = cloneCardTemplate.querySelector(`.popup__description`);
+  if (!add.offer.description) {
+    cloneCardTemplate.removeChild(description);
+  }
+
+  const photos = cloneCardTemplate.querySelector(`.popup__photos`);
+  if (cloneCardTemplate.querySelector(`.popup__photo`).getAttribute(`src`) === `undefined`) {
+    photos.remove();
+  }
+
+  return cloneCardTemplate;
+
+};
+
+const addFragmentOfRenderCards = () => {
+  const fragmentOfCards = document.createDocumentFragment();
+  for (let i = 0; i < NUMBER_OF_ADS; i++) {
+    fragmentOfCards.appendChild(renderCard(getArrayOfAds(NUMBER_OF_ADS)[i]));
+  }
+  filters.before(fragmentOfCards);
+};
+
 // -------------------------------------------------------------------------------------------
 const adForm = document.querySelector(`.ad-form`);
 const inputs = adForm.querySelectorAll(`fieldset`);
@@ -157,7 +227,7 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-
+  addFragmentOfRenderCards();
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
