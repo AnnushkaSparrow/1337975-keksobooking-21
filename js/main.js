@@ -154,18 +154,11 @@ const renderCard = (add) => {
   if (cloneCardTemplate.querySelector(`.popup__photo`).getAttribute(`src`) === `undefined`) {
     photos.remove();
   }
-
+  filters.before(cloneCardTemplate);
   return cloneCardTemplate;
 
 };
 
-const addFragmentOfRenderCards = () => {
-  const fragmentOfCards = document.createDocumentFragment();
-  for (let i = 0; i < NUMBER_OF_ADS; i++) {
-    fragmentOfCards.appendChild(renderCard(getArrayOfAds(NUMBER_OF_ADS)[i]));
-  }
-  filters.before(fragmentOfCards);
-};
 
 // -------------------------------------------------------------------------------------------
 const adForm = document.querySelector(`.ad-form`);
@@ -227,15 +220,13 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  addFragmentOfRenderCards();
+  renderCard(getAd(AVATARS[0], TITLES[0]));
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
     syncRoomsToGuests(value);
   });
-
-
 };
 
 const onMainPinMousedownPress = (evt) => evt.button === 0 && setActivePage();
