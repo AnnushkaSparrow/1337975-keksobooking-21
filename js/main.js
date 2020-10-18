@@ -76,25 +76,89 @@ const getArrayOfAds = (numberOfAds) => {
   return itemOfArray;
 };
 
+const arrayOfAds = getArrayOfAds(NUMBER_OF_ADS);
+
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const listOfPins = document.querySelector(`.map__pins`);
 
-const renderPin = (add) => {
-  const clonePinTemplate = pinTemplate.cloneNode(true);
-  clonePinTemplate.querySelector(`img`).src = add.author.avatar;
-  clonePinTemplate.querySelector(`img`).alt = add.offer.title;
-  clonePinTemplate.style = `left: ${add.location.x - WIDTH_PIN / 2}px; top: ${add.location.y - HEIGHT_PIN}px;`;
+const renderPin = (ad) => {
+  const pin = pinTemplate.cloneNode(true);
+  pin.querySelector(`img`).src = ad.author.avatar;
+  pin.querySelector(`img`).alt = ad.offer.title;
+  pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
-  return clonePinTemplate;
+  return pin;
 };
 
 const addFragmentOfRenderPins = () => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < NUMBER_OF_ADS; i++) {
-    fragment.appendChild(renderPin(getArrayOfAds(NUMBER_OF_ADS)[i]));
+    fragment.appendChild(renderPin(arrayOfAds[i]));
   }
 
   listOfPins.appendChild(fragment);
+};
+
+// -------------------------------------------------------------------------------------------------------------
+const typesOfRealty = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalo: `Бунгало`
+};
+
+const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+const filters = document.querySelector(`.map__filters-container`);
+
+const popupPhoto = cardTemplate.querySelector(`.popup__photo`);
+
+const createRealtyFeaturesList = (ad) => {
+  const featureFragment = document.createDocumentFragment();
+  ad.offer.features.forEach((feature) => {
+    const featureItem = document.createElement(`li`);
+    featureItem.className = `popup__feature popup__feature--` + feature;
+    featureFragment.appendChild(featureItem);
+  });
+  return featureFragment;
+};
+
+const createRealtyPhotosList = (ad) => {
+  const photosFragment = document.createDocumentFragment();
+  ad.offer.photos.forEach((photo) => {
+    const popupPhotoItem = popupPhoto.cloneNode(true);
+    popupPhotoItem.src = photo;
+    photosFragment.appendChild(popupPhotoItem);
+  });
+  return photosFragment;
+};
+
+const renderCard = (ad) => {
+  const card = cardTemplate.cloneNode(true);
+  card.querySelector(`.popup__title`).textContent = ad.offer.title;
+  card.querySelector(`.popup__text--address`).textContent = ad.offer.address;
+  card.querySelector(`.popup__text--price`).textContent = `${ad.offer.price}₽/ночь`;
+  card.querySelector(`.popup__type`).textContent = typesOfRealty[ad.offer.type];
+  card.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
+  card.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
+  card.querySelector(`.popup__features`).innerHTML = ``;
+  card.querySelector(`.popup__features`).appendChild(createRealtyFeaturesList(ad));
+  card.querySelector(`.popup__description`).textContent = ad.offer.description;
+  card.querySelector(`.popup__photos`).removeChild(card.querySelector(`.popup__photo`));
+  card.querySelector(`.popup__photos`).appendChild(createRealtyPhotosList(ad));
+  card.querySelector(`.popup__avatar`).src = ad.author.avatar;
+
+  const description = card.querySelector(`.popup__description`);
+  if (!ad.offer.description) {
+    card.removeChild(description);
+  }
+
+  const photos = card.querySelector(`.popup__photos`);
+  if (card.querySelector(`.popup__photo`).getAttribute(`src`) === `undefined`) {
+    photos.remove();
+  }
+  filters.before(card);
+  return card;
+
 };
 
 // -------------------------------------------------------------------------------------------
@@ -157,15 +221,13 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-
+  renderCard(arrayOfAds[0]);
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
     syncRoomsToGuests(value);
   });
-
-
 };
 
 const onMainPinMousedownPress = (evt) => evt.button === 0 && setActivePage();
