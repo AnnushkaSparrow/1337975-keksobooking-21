@@ -76,22 +76,24 @@ const getArrayOfAds = (numberOfAds) => {
   return itemOfArray;
 };
 
+const arrayOfAds = getArrayOfAds(NUMBER_OF_ADS);
+
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const listOfPins = document.querySelector(`.map__pins`);
 
-const renderPin = (add) => {
-  const clonePinTemplate = pinTemplate.cloneNode(true);
-  clonePinTemplate.querySelector(`img`).src = add.author.avatar;
-  clonePinTemplate.querySelector(`img`).alt = add.offer.title;
-  clonePinTemplate.style = `left: ${add.location.x - WIDTH_PIN / 2}px; top: ${add.location.y - HEIGHT_PIN}px;`;
+const renderPin = (ad) => {
+  const pin = pinTemplate.cloneNode(true);
+  pin.querySelector(`img`).src = ad.author.avatar;
+  pin.querySelector(`img`).alt = ad.offer.title;
+  pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
-  return clonePinTemplate;
+  return pin;
 };
 
 const addFragmentOfRenderPins = () => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < NUMBER_OF_ADS; i++) {
-    fragment.appendChild(renderPin(getArrayOfAds(NUMBER_OF_ADS)[i]));
+    fragment.appendChild(renderPin(arrayOfAds[i]));
   }
 
   listOfPins.appendChild(fragment);
@@ -110,9 +112,9 @@ const filters = document.querySelector(`.map__filters-container`);
 
 const popupPhoto = cardTemplate.querySelector(`.popup__photo`);
 
-const createFeatureFragment = (add) => {
+const createRealtyFeaturesList = (ad) => {
   const featureFragment = document.createDocumentFragment();
-  add.offer.features.forEach((feature) => {
+  ad.offer.features.forEach((feature) => {
     const featureItem = document.createElement(`li`);
     featureItem.className = `popup__feature popup__feature--` + feature;
     featureFragment.appendChild(featureItem);
@@ -120,9 +122,9 @@ const createFeatureFragment = (add) => {
   return featureFragment;
 };
 
-const createPhotosFragment = (add) => {
+const createRealtyPhotosList = (ad) => {
   const photosFragment = document.createDocumentFragment();
-  add.offer.photos.forEach((photo) => {
+  ad.offer.photos.forEach((photo) => {
     const popupPhotoItem = popupPhoto.cloneNode(true);
     popupPhotoItem.src = photo;
     photosFragment.appendChild(popupPhotoItem);
@@ -130,35 +132,34 @@ const createPhotosFragment = (add) => {
   return photosFragment;
 };
 
-const renderCard = (add) => {
-  const cloneCardTemplate = cardTemplate.cloneNode(true);
-  cloneCardTemplate.querySelector(`.popup__title`).textContent = add.offer.title;
-  cloneCardTemplate.querySelector(`.popup__text--address`).textContent = add.offer.address;
-  cloneCardTemplate.querySelector(`.popup__text--price`).textContent = `${add.offer.price}₽/ночь`;
-  cloneCardTemplate.querySelector(`.popup__type`).textContent = types[add.offer.type];
-  cloneCardTemplate.querySelector(`.popup__text--capacity`).textContent = `${add.offer.rooms} комнаты для ${add.offer.guests} гостей`;
-  cloneCardTemplate.querySelector(`.popup__text--time`).textContent = `Заезд после ${add.offer.checkin}, выезд до ${add.offer.checkout}`;
-  cloneCardTemplate.querySelector(`.popup__features`).innerHTML = ``;
-  cloneCardTemplate.querySelector(`.popup__features`).appendChild(createFeatureFragment(add));
-  cloneCardTemplate.querySelector(`.popup__description`).textContent = add.offer.description;
-  cloneCardTemplate.querySelector(`.popup__photos`).removeChild(cloneCardTemplate.querySelector(`.popup__photo`));
-  cloneCardTemplate.querySelector(`.popup__photos`).appendChild(createPhotosFragment(add));
-  cloneCardTemplate.querySelector(`.popup__avatar`).src = add.author.avatar;
+const renderCard = (ad) => {
+  const card = cardTemplate.cloneNode(true);
+  card.querySelector(`.popup__title`).textContent = ad.offer.title;
+  card.querySelector(`.popup__text--address`).textContent = ad.offer.address;
+  card.querySelector(`.popup__text--price`).textContent = `${ad.offer.price}₽/ночь`;
+  card.querySelector(`.popup__type`).textContent = types[ad.offer.type];
+  card.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
+  card.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
+  card.querySelector(`.popup__features`).innerHTML = ``;
+  card.querySelector(`.popup__features`).appendChild(createRealtyFeaturesList(ad));
+  card.querySelector(`.popup__description`).textContent = ad.offer.description;
+  card.querySelector(`.popup__photos`).removeChild(card.querySelector(`.popup__photo`));
+  card.querySelector(`.popup__photos`).appendChild(createRealtyPhotosList(ad));
+  card.querySelector(`.popup__avatar`).src = ad.author.avatar;
 
-  const description = cloneCardTemplate.querySelector(`.popup__description`);
-  if (!add.offer.description) {
-    cloneCardTemplate.removeChild(description);
+  const description = card.querySelector(`.popup__description`);
+  if (!ad.offer.description) {
+    card.removeChild(description);
   }
 
-  const photos = cloneCardTemplate.querySelector(`.popup__photos`);
-  if (cloneCardTemplate.querySelector(`.popup__photo`).getAttribute(`src`) === `undefined`) {
+  const photos = card.querySelector(`.popup__photos`);
+  if (card.querySelector(`.popup__photo`).getAttribute(`src`) === `undefined`) {
     photos.remove();
   }
-  filters.before(cloneCardTemplate);
-  return cloneCardTemplate;
+  filters.before(card);
+  return card;
 
 };
-
 
 // -------------------------------------------------------------------------------------------
 const adForm = document.querySelector(`.ad-form`);
@@ -220,7 +221,7 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  renderCard(getAd(AVATARS[0], TITLES[0]));
+  renderCard(arrayOfAds[0]);
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
