@@ -100,7 +100,7 @@ const addFragmentOfRenderPins = () => {
 };
 
 // -------------------------------------------------------------------------------------------------------------
-const types = {
+const typesOfRealty = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
@@ -137,7 +137,7 @@ const renderCard = (ad) => {
   card.querySelector(`.popup__title`).textContent = ad.offer.title;
   card.querySelector(`.popup__text--address`).textContent = ad.offer.address;
   card.querySelector(`.popup__text--price`).textContent = `${ad.offer.price}₽/ночь`;
-  card.querySelector(`.popup__type`).textContent = types[ad.offer.type];
+  card.querySelector(`.popup__type`).textContent = typesOfRealty[ad.offer.type];
   card.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
   card.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   card.querySelector(`.popup__features`).innerHTML = ``;
