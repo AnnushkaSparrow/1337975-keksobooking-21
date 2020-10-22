@@ -81,10 +81,13 @@ const arrayOfAds = getArrayOfAds(NUMBER_OF_ADS);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const listOfPins = document.querySelector(`.map__pins`);
 
-const renderPin = (ad) => {
+const renderPin = (ad, index) => {
   const pin = pinTemplate.cloneNode(true);
   pin.querySelector(`img`).src = ad.author.avatar;
+  pin.querySelector(`img`).setAttribute(`class`, `pin`);
   pin.querySelector(`img`).alt = ad.offer.title;
+  pin.querySelector(`img`).setAttribute(`value`, index);
+  pin.setAttribute(`value`, index);
   pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
   return pin;
@@ -93,10 +96,11 @@ const renderPin = (ad) => {
 const addFragmentOfRenderPins = () => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < NUMBER_OF_ADS; i++) {
-    fragment.appendChild(renderPin(arrayOfAds[i]));
+    fragment.appendChild(renderPin(arrayOfAds[i], i));
   }
 
   listOfPins.appendChild(fragment);
+
 };
 
 // -------------------------------------------------------------------------------------------------------------
@@ -104,7 +108,7 @@ const typesOfRealty = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
-  bungalo: `Бунгало`
+  bungalow: `Бунгало`
 };
 
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -221,7 +225,7 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  renderCard(arrayOfAds[0]);
+  // renderCard(arrayOfAds[0]);
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
@@ -242,3 +246,46 @@ setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y, HEIGHT_SMALL_MAIN_PIN /
 // активное состояние
 mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
 mainPin.addEventListener(`keydown`, onMainPinEnterPress);
+
+
+const showCard = (evt) => {
+  const index = evt.target.getAttribute(`value`);
+  const target = evt.target;
+  if (target.matches(`.pin`) || target.matches(`.map__pin`)) {
+    renderCard(arrayOfAds[index]);
+  }
+};
+
+const removeCard = () => {
+  const mapCard = document.querySelector(`.map__card`);
+  if (mapCard) {
+    mapCard.remove();
+    document.removeEventListener(`keydown`, onPopupEscPress);
+
+  }
+};
+
+const onPopupEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    removeCard();
+  }
+};
+
+const onCloseClickPress = () => {
+  const popupClose = document.querySelector(`.popup__close`);
+  if (popupClose) {
+    popupClose.addEventListener(`click`, () => {
+      removeCard();
+    });
+  }
+};
+
+
+listOfPins.addEventListener(`click`, (evt) => {
+  removeCard();
+  showCard(evt);
+  onCloseClickPress();
+  document.addEventListener(`keydown`, onPopupEscPress);
+
+}
+);
