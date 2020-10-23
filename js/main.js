@@ -251,7 +251,7 @@ mainPin.addEventListener(`keydown`, onMainPinEnterPress);
 const showCard = (evt) => {
   const index = evt.target.getAttribute(`value`);
   const target = evt.target;
-  if (target.matches(`.pin`) || target.matches(`.map__pin`) &&  !target.matches(`.map__pin--main`)) {
+  if (target.matches(`.pin`) || target.matches(`.map__pin`) && !target.matches(`.map__pin--main`)) {
     renderCard(arrayOfAds[index]);
   }
 };
@@ -328,10 +328,10 @@ selectionOfTypeOfRealty.addEventListener(`change`, () => syncTypeOfRealtyToMinPr
 
 const validatePrice = (evt) => {
   const target = evt.target;
-    if (target.validity.valueMissing) {
+  if (target.validity.valueMissing) {
     target.setCustomValidity(`Обязательное поле`);
   } else {
-    target.setCustomValidity(``)
+    target.setCustomValidity(``);
   }
 };
 
@@ -349,11 +349,11 @@ const getTimeout = (value) => {
 const timein = document.querySelector(`#timein`);
 const timeout = document.querySelector(`#timeout`);
 
-const syncTimeinToTimeout = (timein) => {
+const syncTimeinToTimeout = (FieldTimein) => {
   timeout.innerHTML = ``;
-  const time = getTimeout(timein);
+  const time = getTimeout(FieldTimein);
   const optionNodeOfTimeout = document.createElement(`option`);
-  optionNodeOfTimeout.value = timein.value;
+  optionNodeOfTimeout.value = FieldTimein.value;
   optionNodeOfTimeout.innerHTML = time;
   timeout.appendChild(optionNodeOfTimeout);
 };
