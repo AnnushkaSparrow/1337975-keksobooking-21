@@ -23,6 +23,8 @@ const HEIGHT_SMALL_MAIN_PIN = 62;
 const COORDINATE_MAIN_PIN_X = 570;
 const COORDINATE_MAIN_PIN_Y = 375;
 const NUMBER_OF_ADS = 8;
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
 
 
 const map = document.querySelector(`.map`);
@@ -103,7 +105,7 @@ const addFragmentOfRenderPins = () => {
 
 };
 
-// -------------------------------------------------------------------------------------------------------------
+
 const typesOfRealty = {
   palace: `Дворец`,
   flat: `Квартира`,
@@ -165,7 +167,7 @@ const renderCard = (ad) => {
 
 };
 
-// -------------------------------------------------------------------------------------------
+
 const adForm = document.querySelector(`.ad-form`);
 const inputs = adForm.querySelectorAll(`fieldset`);
 const selects = document.querySelectorAll(`select`);
@@ -185,7 +187,6 @@ const getOptions = (value) => {
   }
 };
 
-
 const syncRoomsToGuests = (roomsNumber) => {
   guestsSelect.innerHTML = ``;
   const options = getOptions(roomsNumber);
@@ -200,7 +201,6 @@ const syncRoomsToGuests = (roomsNumber) => {
 };
 
 syncRoomsToGuests(roomsSelect.value);
-
 
 const setUpAttributes = (arrOfTags, attribute, valueOfAttribute) => {
   arrOfTags.forEach((e, index) => {
@@ -225,13 +225,13 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  // renderCard(arrayOfAds[0]);
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
     syncRoomsToGuests(value);
   });
+  timein.addEventListener(`change`, () => syncTimeinToTimeout(timein.value));
 };
 
 const onMainPinMousedownPress = (evt) => evt.button === 0 && setActivePage();
@@ -251,7 +251,7 @@ mainPin.addEventListener(`keydown`, onMainPinEnterPress);
 const showCard = (evt) => {
   const index = evt.target.getAttribute(`value`);
   const target = evt.target;
-  if (target.matches(`.pin`) || target.matches(`.map__pin`)) {
+  if (target.matches(`.pin`) || target.matches(`.map__pin`) &&  !target.matches(`.map__pin--main`)) {
     renderCard(arrayOfAds[index]);
   }
 };
@@ -261,7 +261,6 @@ const removeCard = () => {
   if (mapCard) {
     mapCard.remove();
     document.removeEventListener(`keydown`, onPopupEscPress);
-
   }
 };
 
@@ -280,12 +279,82 @@ const onCloseClickPress = () => {
   }
 };
 
-
 listOfPins.addEventListener(`click`, (evt) => {
   removeCard();
   showCard(evt);
   onCloseClickPress();
   document.addEventListener(`keydown`, onPopupEscPress);
-
 }
 );
+
+const title = document.querySelector(`#title`);
+
+const validateOfNumberOfSimbols = (evt) => {
+  const target = evt.target;
+  if (target.value.length < MIN_TITLE_LENGTH) {
+    target.setCustomValidity(`Необходимо ввести ещё ${MIN_TITLE_LENGTH - target.value.length} симв.`);
+  } else if (target.value.length > MAX_TITLE_LENGTH) {
+    target.setCustomValidity(`Удалите лишние ${target.value.length - MAX_TITLE_LENGTH} симв.`);
+  } else {
+    target.setCustomValidity(``);
+  }
+  target.reportValidity();
+};
+
+title.addEventListener(`input`, validateOfNumberOfSimbols);
+
+const getMinPrice = (value) => {
+  switch (value) {
+    case `bungalow`: return 0;
+    case `flat`: return 1000;
+    case `house`: return 5000;
+    case `palace`: return 10000;
+    default : return ``;
+  }
+};
+
+const price = document.querySelector(`#price`);
+const selectionOfTypeOfRealty = document.querySelector(`#type`);
+
+const syncTypeOfRealtyToMinPrice = (types) => {
+  const minPrice = getMinPrice(types);
+  price.value = minPrice;
+  price.setAttribute(`placeholder`, minPrice);
+  price.setAttribute(`min`, minPrice);
+
+};
+syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
+selectionOfTypeOfRealty.addEventListener(`change`, () => syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value));
+
+const validatePrice = (evt) => {
+  const target = evt.target;
+    if (target.validity.valueMissing) {
+    target.setCustomValidity(`Обязательное поле`);
+  } else {
+    target.setCustomValidity(``)
+  }
+};
+
+price.addEventListener(`invalid`, validatePrice);
+
+const getTimeout = (value) => {
+  switch (value) {
+    case `12:00`: return `Выезд до 12`;
+    case `13:00`: return `Выезд до 13`;
+    case `14:00`: return `Выезд до 14`;
+    default : return ``;
+  }
+};
+
+const timein = document.querySelector(`#timein`);
+const timeout = document.querySelector(`#timeout`);
+
+const syncTimeinToTimeout = (timein) => {
+  timeout.innerHTML = ``;
+  const time = getTimeout(timein);
+  const optionNodeOfTimeout = document.createElement(`option`);
+  optionNodeOfTimeout.value = timein.value;
+  optionNodeOfTimeout.innerHTML = time;
+  timeout.appendChild(optionNodeOfTimeout);
+};
+syncTimeinToTimeout(timein.value);
