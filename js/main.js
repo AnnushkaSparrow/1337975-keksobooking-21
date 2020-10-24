@@ -92,6 +92,13 @@ const renderPin = (ad, index) => {
   pin.setAttribute(`value`, index);
   pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
+  pin.addEventListener(`click`, () => {
+    removeCard();
+    renderCard(arrayOfAds[index]);
+    onCloseClickPress();
+    document.addEventListener(`keydown`, onPopupEscPress);
+  }
+  );
   return pin;
 };
 
@@ -102,7 +109,6 @@ const addFragmentOfRenderPins = () => {
   }
 
   listOfPins.appendChild(fragment);
-
 };
 
 
@@ -215,7 +221,7 @@ const deleteAttributes = (arr, attribute) => {
 };
 
 const setAddress = (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
-
+const timein = document.querySelector(`#timein`);
 
 const setActivePage = () => {
   map.classList.remove(`map--faded`);
@@ -248,14 +254,6 @@ mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
 mainPin.addEventListener(`keydown`, onMainPinEnterPress);
 
 
-const showCard = (evt) => {
-  const index = evt.target.getAttribute(`value`);
-  const target = evt.target;
-  if (target.matches(`.pin`) || target.matches(`.map__pin`) && !target.matches(`.map__pin--main`)) {
-    renderCard(arrayOfAds[index]);
-  }
-};
-
 const removeCard = () => {
   const mapCard = document.querySelector(`.map__card`);
   if (mapCard) {
@@ -279,13 +277,6 @@ const onCloseClickPress = () => {
   }
 };
 
-listOfPins.addEventListener(`click`, (evt) => {
-  removeCard();
-  showCard(evt);
-  onCloseClickPress();
-  document.addEventListener(`keydown`, onPopupEscPress);
-}
-);
 
 const title = document.querySelector(`#title`);
 
@@ -303,15 +294,14 @@ const validateOfNumberOfSimbols = (evt) => {
 
 title.addEventListener(`input`, validateOfNumberOfSimbols);
 
-const getMinPrice = (value) => {
-  switch (value) {
-    case `bungalow`: return 0;
-    case `flat`: return 1000;
-    case `house`: return 5000;
-    case `palace`: return 10000;
-    default : return ``;
-  }
+const minPriceOfRealty = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
 };
+
+const getMinPrice = (value) => minPriceOfRealty[value];
 
 const price = document.querySelector(`#price`);
 const selectionOfTypeOfRealty = document.querySelector(`#type`);
@@ -338,22 +328,17 @@ const validatePrice = (evt) => {
 price.addEventListener(`invalid`, validatePrice);
 
 const getTimeout = (value) => {
-  switch (value) {
-    case `12:00`: return `Выезд до 12`;
-    case `13:00`: return `Выезд до 13`;
-    case `14:00`: return `Выезд до 14`;
-    default : return ``;
-  }
+  const time = value.substring(0, 2);
+  return `Выезд до ${time}`;
 };
 
-const timein = document.querySelector(`#timein`);
 const timeout = document.querySelector(`#timeout`);
 
-const syncTimeinToTimeout = (FieldTimein) => {
+const syncTimeinToTimeout = (fieldTimein) => {
   timeout.innerHTML = ``;
-  const time = getTimeout(FieldTimein);
+  const time = getTimeout(fieldTimein);
   const optionNodeOfTimeout = document.createElement(`option`);
-  optionNodeOfTimeout.value = FieldTimein.value;
+  optionNodeOfTimeout.value = fieldTimein.value;
   optionNodeOfTimeout.innerHTML = time;
   timeout.appendChild(optionNodeOfTimeout);
 };
