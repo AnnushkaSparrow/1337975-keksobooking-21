@@ -86,10 +86,7 @@ const listOfPins = document.querySelector(`.map__pins`);
 const renderPin = (ad, index) => {
   const pin = pinTemplate.cloneNode(true);
   pin.querySelector(`img`).src = ad.author.avatar;
-  pin.querySelector(`img`).setAttribute(`class`, `pin`);
   pin.querySelector(`img`).alt = ad.offer.title;
-  pin.querySelector(`img`).setAttribute(`value`, index);
-  pin.setAttribute(`value`, index);
   pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
   pin.addEventListener(`click`, () => {
@@ -301,13 +298,11 @@ const minPriceOfRealty = {
   palace: 10000
 };
 
-const getMinPrice = (value) => minPriceOfRealty[value];
-
 const price = document.querySelector(`#price`);
 const selectionOfTypeOfRealty = document.querySelector(`#type`);
 
 const syncTypeOfRealtyToMinPrice = (types) => {
-  const minPrice = getMinPrice(types);
+  const minPrice = minPriceOfRealty[types];
   price.value = minPrice;
   price.setAttribute(`placeholder`, minPrice);
   price.setAttribute(`min`, minPrice);
@@ -327,10 +322,8 @@ const validatePrice = (evt) => {
 
 price.addEventListener(`invalid`, validatePrice);
 
-const getTimeout = (value) => {
-  const time = value.substring(0, 2);
-  return `Выезд до ${time}`;
-};
+const getTimeout = (value) => `Выезд до ${value.substring(0, 2)}`;
+
 
 const timeout = document.querySelector(`#timeout`);
 
