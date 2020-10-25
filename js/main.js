@@ -23,6 +23,8 @@ const HEIGHT_SMALL_MAIN_PIN = 62;
 const COORDINATE_MAIN_PIN_X = 570;
 const COORDINATE_MAIN_PIN_Y = 375;
 const NUMBER_OF_ADS = 8;
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
 
 
 const map = document.querySelector(`.map`);
@@ -81,30 +83,37 @@ const arrayOfAds = getArrayOfAds(NUMBER_OF_ADS);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const listOfPins = document.querySelector(`.map__pins`);
 
-const renderPin = (ad) => {
+const renderPin = (ad, index) => {
   const pin = pinTemplate.cloneNode(true);
   pin.querySelector(`img`).src = ad.author.avatar;
   pin.querySelector(`img`).alt = ad.offer.title;
   pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
+  pin.addEventListener(`click`, () => {
+    removeCard();
+    renderCard(arrayOfAds[index]);
+    onCloseClickPress();
+    document.addEventListener(`keydown`, onPopupEscPress);
+  }
+  );
   return pin;
 };
 
 const addFragmentOfRenderPins = () => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < NUMBER_OF_ADS; i++) {
-    fragment.appendChild(renderPin(arrayOfAds[i]));
+    fragment.appendChild(renderPin(arrayOfAds[i], i));
   }
 
   listOfPins.appendChild(fragment);
 };
 
-// -------------------------------------------------------------------------------------------------------------
+
 const typesOfRealty = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
-  bungalo: `Бунгало`
+  bungalow: `Бунгало`
 };
 
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -161,7 +170,7 @@ const renderCard = (ad) => {
 
 };
 
-// -------------------------------------------------------------------------------------------
+
 const adForm = document.querySelector(`.ad-form`);
 const inputs = adForm.querySelectorAll(`fieldset`);
 const selects = document.querySelectorAll(`select`);
@@ -181,7 +190,6 @@ const getOptions = (value) => {
   }
 };
 
-
 const syncRoomsToGuests = (roomsNumber) => {
   guestsSelect.innerHTML = ``;
   const options = getOptions(roomsNumber);
@@ -197,7 +205,6 @@ const syncRoomsToGuests = (roomsNumber) => {
 
 syncRoomsToGuests(roomsSelect.value);
 
-
 const setUpAttributes = (arrOfTags, attribute, valueOfAttribute) => {
   arrOfTags.forEach((e, index) => {
     arrOfTags[index].setAttribute(attribute, valueOfAttribute);
@@ -211,7 +218,7 @@ const deleteAttributes = (arr, attribute) => {
 };
 
 const setAddress = (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
-
+const timein = document.querySelector(`#timein`);
 
 const setActivePage = () => {
   map.classList.remove(`map--faded`);
@@ -221,13 +228,13 @@ const setActivePage = () => {
   addFragmentOfRenderPins();
   mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
   mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-  renderCard(arrayOfAds[0]);
   setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
   roomsSelect.addEventListener(`change`, (evt) => {
     const value = evt.target.value;
     roomsSelect.value = value;
     syncRoomsToGuests(value);
   });
+  timein.addEventListener(`change`, () => syncTimeinToTimeout(timein.value));
 };
 
 const onMainPinMousedownPress = (evt) => evt.button === 0 && setActivePage();
@@ -242,3 +249,90 @@ setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y, HEIGHT_SMALL_MAIN_PIN /
 // активное состояние
 mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
 mainPin.addEventListener(`keydown`, onMainPinEnterPress);
+
+
+const removeCard = () => {
+  const mapCard = document.querySelector(`.map__card`);
+  if (mapCard) {
+    mapCard.remove();
+    document.removeEventListener(`keydown`, onPopupEscPress);
+  }
+};
+
+const onPopupEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    removeCard();
+  }
+};
+
+const onCloseClickPress = () => {
+  const popupClose = document.querySelector(`.popup__close`);
+  if (popupClose) {
+    popupClose.addEventListener(`click`, () => {
+      removeCard();
+    });
+  }
+};
+
+
+const title = document.querySelector(`#title`);
+
+const validateOfNumberOfSimbols = (evt) => {
+  const target = evt.target;
+  if (target.value.length < MIN_TITLE_LENGTH) {
+    target.setCustomValidity(`Необходимо ввести ещё ${MIN_TITLE_LENGTH - target.value.length} симв.`);
+  } else if (target.value.length > MAX_TITLE_LENGTH) {
+    target.setCustomValidity(`Удалите лишние ${target.value.length - MAX_TITLE_LENGTH} симв.`);
+  } else {
+    target.setCustomValidity(``);
+  }
+  target.reportValidity();
+};
+
+title.addEventListener(`input`, validateOfNumberOfSimbols);
+
+const minPriceOfRealty = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+const price = document.querySelector(`#price`);
+const selectionOfTypeOfRealty = document.querySelector(`#type`);
+
+const syncTypeOfRealtyToMinPrice = (types) => {
+  const minPrice = minPriceOfRealty[types];
+  price.value = minPrice;
+  price.setAttribute(`placeholder`, minPrice);
+  price.setAttribute(`min`, minPrice);
+
+};
+syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
+selectionOfTypeOfRealty.addEventListener(`change`, () => syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value));
+
+const validatePrice = (evt) => {
+  const target = evt.target;
+  if (target.validity.valueMissing) {
+    target.setCustomValidity(`Обязательное поле`);
+  } else {
+    target.setCustomValidity(``);
+  }
+};
+
+price.addEventListener(`invalid`, validatePrice);
+
+const getTimeout = (value) => `Выезд до ${value.substring(0, 2)}`;
+
+
+const timeout = document.querySelector(`#timeout`);
+
+const syncTimeinToTimeout = (fieldTimein) => {
+  timeout.innerHTML = ``;
+  const time = getTimeout(fieldTimein);
+  const optionNodeOfTimeout = document.createElement(`option`);
+  optionNodeOfTimeout.value = fieldTimein.value;
+  optionNodeOfTimeout.innerHTML = time;
+  timeout.appendChild(optionNodeOfTimeout);
+};
+syncTimeinToTimeout(timein.value);
