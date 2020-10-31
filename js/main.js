@@ -3,8 +3,6 @@
   const WIDTH_MAIN_PIN = 62;
   const HEIGHT_MAIN_PIN = 84;
   const HEIGHT_SMALL_MAIN_PIN = 62;
-  const COORDINATE_MAIN_PIN_X = 570;
-  const COORDINATE_MAIN_PIN_Y = 375;
 
   const map = document.querySelector(`.map`);
   const adForm = document.querySelector(`.ad-form`);
@@ -15,8 +13,9 @@
   const roomsSelect = document.querySelector(`#room_number`);
   const timein = document.querySelector(`#timein`);
 
-
-  const setAddress = (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`);
+  window.main = {
+    setAddress: (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`)
+  };
 
 
   const setActivePage = () => {
@@ -27,7 +26,8 @@
     window.pin.addFragmentOfRenderPins();
     mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
     mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-    setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y);
+    mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
+    window.main.setAddress(mainPin.offsetLeft, mainPin.offsetTop);
     roomsSelect.addEventListener(`change`, (evt) => {
       const value = evt.target.value;
       roomsSelect.value = value;
@@ -43,7 +43,7 @@
   // неактивное состояния
   window.utils.setUpAttributes(inputs, `disabled`, `disabled`);
   window.utils.setUpAttributes(selects, `disabled`, `disabled`);
-  setAddress(COORDINATE_MAIN_PIN_X, COORDINATE_MAIN_PIN_Y, HEIGHT_SMALL_MAIN_PIN / 2);
+  window.main.setAddress(mainPin.offsetLeft, mainPin.offsetTop, HEIGHT_SMALL_MAIN_PIN / 2);
 
   // активное состояние
   mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);

@@ -13,8 +13,8 @@
   const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
   const DESCRIPTIONS = [`Уютная и комфортная квартира только для вас`, `Сдам дом на долгий срок`, `Сдам бунгало молодой паре`];
   const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
-  const COORDINATE_X_MIN = 100;
-  const COORDINATE_X_MAX = document.querySelector(`.map`).offsetWidth - 100;
+  const COORDINATE_X_MIN = 0;
+  const COORDINATE_X_MAX = document.querySelector(`.map`).offsetWidth;
   const COORDINATE_Y_MIN = 130;
   const COORDINATE_Y_MAX = 630;
 
