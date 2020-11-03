@@ -6,6 +6,8 @@
   const NUMBER_OF_ADS = 8;
   const WIDTH_MAIN_PIN = 62;
   const HEIGHT_MAIN_PIN = 84;
+  const MAP_COORDINATE_Y_MIN = 130;
+  const MAP_COORDINATE_Y_MAX = 630;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const listOfPins = document.querySelector(`.map__pins`);
@@ -45,7 +47,7 @@
       };
 
       const onMouseMove = (moveEvt) => {
-        let shift = {
+        const shift = {
           x: startCoords.x - moveEvt.clientX,
           y: startCoords.y - moveEvt.clientY
         };
@@ -58,7 +60,7 @@
         const coordsOfMainPinX = (mainPin.offsetLeft - shift.x) + WIDTH_MAIN_PIN / 2;
         const coordsOfMainPinY = (mainPin.offsetTop - shift.y) + HEIGHT_MAIN_PIN;
 
-        if ((coordsOfMainPinX >= 0 && coordsOfMainPinX < document.querySelector(`.map`).offsetWidth) && (coordsOfMainPinY > 130 && coordsOfMainPinY < 630)) {
+        if ((coordsOfMainPinX >= 0 && coordsOfMainPinX < document.querySelector(`.map`).offsetWidth) && (coordsOfMainPinY > MAP_COORDINATE_Y_MIN && coordsOfMainPinY < MAP_COORDINATE_Y_MAX)) {
 
           mainPin.style.left = `${mainPin.offsetLeft - shift.x}px`;
           mainPin.style.top = `${mainPin.offsetTop - shift.y}px`;

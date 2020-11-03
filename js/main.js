@@ -24,7 +24,7 @@
     window.utils.deleteAttributes(inputs, `disabled`);
     window.utils.deleteAttributes(selects, `disabled`);
     window.pin.addFragmentOfRenderPins();
-    mainPin.removeEventListener(`mousedown`, onMainPinMousedownPress);
+    mainPin.removeEventListener(`mousedown`, onMousedownPressToActivePage);
     mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
     mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
     window.main.setAddress(mainPin.offsetLeft, mainPin.offsetTop);
@@ -36,7 +36,7 @@
     timein.addEventListener(`change`, () => window.form.syncTimeinToTimeout(timein.value));
   };
 
-  const onMainPinMousedownPress = (evt) => window.utils.isMousedown(evt, setActivePage);
+  const onMousedownPressToActivePage = (evt) => window.utils.isMousedown(evt, setActivePage);
 
   const onMainPinEnterPress = (evt) => window.utils.isEnter(evt, setActivePage);
 
@@ -46,6 +46,6 @@
   window.main.setAddress(mainPin.offsetLeft, mainPin.offsetTop, HEIGHT_SMALL_MAIN_PIN / 2);
 
   // активное состояние
-  mainPin.addEventListener(`mousedown`, onMainPinMousedownPress);
+  mainPin.addEventListener(`mousedown`, onMousedownPressToActivePage);
   mainPin.addEventListener(`keydown`, onMainPinEnterPress);
 })();
