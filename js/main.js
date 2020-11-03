@@ -23,7 +23,7 @@
     adForm.classList.remove(`ad-form--disabled`);
     window.utils.deleteAttributes(inputs, `disabled`);
     window.utils.deleteAttributes(selects, `disabled`);
-    window.pin.addFragmentOfRenderPins();
+    window.load(window.pin.addFragmentOfRenderPins, window.utils.errorHandler);
     mainPin.removeEventListener(`mousedown`, onMousedownPressToActivePage);
     mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
     mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
