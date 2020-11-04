@@ -56,12 +56,12 @@
       }
 
       const photos = card.querySelector(`.popup__photos`);
-      if (card.querySelector(`.popup__photo`).getAttribute(`src`) === `undefined`) {
+      if (card.querySelector(`.popup__photo`) === null) {
         photos.remove();
       }
+
       filters.before(card);
       return card;
-
     },
 
     removeCard: () => {

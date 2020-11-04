@@ -3,7 +3,6 @@
 (() => {
   const WIDTH_PIN = 50;
   const HEIGHT_PIN = 70;
-  const NUMBER_OF_ADS = 8;
   const WIDTH_MAIN_PIN = 62;
   const HEIGHT_MAIN_PIN = 84;
   const MAP_COORDINATE_Y_MIN = 130;
@@ -12,8 +11,8 @@
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const listOfPins = document.querySelector(`.map__pins`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  const arrayOfAds = window.data.getArrayOfAds(NUMBER_OF_ADS);
-  const renderPin = (ad, index) => {
+
+  const renderPin = (ad, index, arrayOfAds) => {
     const pin = pinTemplate.cloneNode(true);
     pin.querySelector(`img`).src = ad.author.avatar;
     pin.querySelector(`img`).alt = ad.offer.title;
@@ -30,13 +29,16 @@
   };
 
   window.pin = {
-    addFragmentOfRenderPins: () => {
+    addFragmentOfRenderPins: (arrayOfAds) => {
       const fragment = document.createDocumentFragment();
-      for (let i = 0; i < NUMBER_OF_ADS; i++) {
-        fragment.appendChild(renderPin(arrayOfAds[i], i));
-      }
 
+      for (let i = 0; i < arrayOfAds.length; i++) {
+        if (arrayOfAds[i].offer) {
+          fragment.appendChild(renderPin(arrayOfAds[i], i, arrayOfAds));
+        }
+      }
       listOfPins.appendChild(fragment);
+
     },
     moveMainPin: (evt) => {
       evt.preventDefault();
