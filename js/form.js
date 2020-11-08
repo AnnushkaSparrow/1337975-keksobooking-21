@@ -8,13 +8,42 @@
   const guestsSelect = document.querySelector(`#capacity`);
   const timeout = document.querySelector(`#timeout`);
   const timein = document.querySelector(`#timein`);
+  const adForm = document.querySelector(`.ad-form`);
+  const mainPin = document.querySelector(`.map__pin--main`);
+  const MAIN_PIN_LEFT = mainPin.offsetLeft;
+  const MAIN_PIN_TOP = mainPin.offsetTop;
+  const HEIGHT_SMALL_MAIN_PIN = 62;
+
+
 
   const getOptions = (value) => {
     switch (value) {
-      case `1`: return [`для 1 гостя`];
-      case `2`: return [`для 1 гостя`, `для 2 гостей`];
-      case `3`: return [`для 1 гостя`, `для 2 гостей`, `для 3 гостей`];
-      case `100`: return [`не для гостей`];
+      case `1`: return [{
+        label: `для 1 гостя`,
+        value: 1
+      }];
+      case `2`: return [{
+        label: `для 1 гостя`,
+        value: 1
+      }, {
+        label: `для 2 гостей`,
+        value: 2
+      } ];
+      case `3`: return [{
+        label: `для 1 гостя`,
+        value: 1
+      }, {
+        label: `для 2 гостей`,
+        value: 2
+      },
+      {
+        label: `для 3 гостей`,
+        value: 3
+      }];
+      case `100`: return [{
+        label: `не для гостей`,
+        value: 0
+      }];
       default: return [];
     }
   };
@@ -26,19 +55,20 @@
       guestsSelect.innerHTML = ``;
       const options = getOptions(roomsNumber);
 
-      options.forEach((option, index) => {
+      options.forEach((option) => {
         const optionNode = document.createElement(`option`);
-        optionNode.value = `${index + 1}`;
-        optionNode.innerHTML = option;
+        optionNode.value = option.value;
+        optionNode.innerHTML = option.label;
         guestsSelect.appendChild(optionNode);
       });
-      guestsSelect.value = (options.length > 0) ? `1` : null;
+      guestsSelect.value = (options.length > 0) ? options[0].value : null;
     },
     syncTimeinToTimeout: (fieldTimein) => {
       timeout.innerHTML = ``;
       const time = getTimeout(fieldTimein);
       const optionNodeOfTimeout = document.createElement(`option`);
       optionNodeOfTimeout.value = fieldTimein.value;
+      optionNodeOfTimeout.setAttribute(`value`, `${fieldTimein}`);
       optionNodeOfTimeout.innerHTML = time;
       timeout.appendChild(optionNodeOfTimeout);
     }
@@ -95,4 +125,84 @@
   };
 
   price.addEventListener(`invalid`, validatePrice);
+
+  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+
+  const setSuccessMassage = () => {
+    const successMessage = successTemplate.cloneNode(true);
+    document.body.appendChild(successMessage);
+
+    const setSuccessMessageOnKeydown = (evt) => {
+      window.utils.isEscEvent(evt, () => {
+        document.body.removeChild(successMessage);
+        document.removeEventListener(`keydown`, setSuccessMessageOnKeydown);
+        document.removeEventListener(`mousedown`, setSuccessMassageOnMouseDown);
+      });
+    };
+
+    const setSuccessMassageOnMouseDown = (evt) => {
+      window.utils.isMousedown(evt, () => {
+        document.body.removeChild(successMessage);
+        document.removeEventListener(`mousedown`, setSuccessMassageOnMouseDown);
+        document.removeEventListener(`keydown`, setSuccessMessageOnKeydown);
+    });
+    };
+
+    document.addEventListener(`keydown`, setSuccessMessageOnKeydown);
+    document.addEventListener(`mousedown`, setSuccessMassageOnMouseDown);
+
+
+  };
+
+  const errorTemplate =  document.querySelector(`#error`).content.querySelector(`.error`);
+  const main = document.querySelector(`main`);
+
+
+  const setErrorMassage = () => {
+    const errorMassage = errorTemplate.cloneNode(true);
+    main.appendChild(errorMassage);
+    const btn = document.querySelector(`.error__button`);
+
+    window.form.removeErrorMessage = (evt) => {
+     window.utils.isEscEvent(evt, () => {
+       main.removeChild(errorMassage);
+       document.removeEventListener(`keydown`, window.form.removeErrorMessage);
+      });
+    };
+
+    document.addEventListener(`keydown`, window.form.removeErrorMessage);
+
+     btn.addEventListener(`mousedown`, function setErrorMassageOnClick (evt) {
+      window.utils.isMousedown(evt, () => {
+       main.removeChild(errorMassage);
+       btn.removeEventListener(`mousedown`, setErrorMassageOnClick);
+       document.removeEventListener(`keydown`, window.form.removeErrorMessage);
+      });
+    });
+  };
+
+  adForm.addEventListener(`submit`, (evt) => {
+    window.upload(new FormData(adForm), () => {
+      window.main.inactivePage();
+      window.pin.removePins();
+      window.card.removeCard();
+      adForm.reset();
+      window.form.syncRoomsToGuests(roomsSelect.value);
+      window.form.syncTimeinToTimeout(timein.value);
+      syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
+      setSuccessMassage();
+    }, setErrorMassage);
+    evt.preventDefault();
+  });
+
+    const resetBtn = document.querySelector(`.ad-form__reset`);
+    resetBtn.addEventListener(`click`, () => {
+      adForm.reset();
+      window.form.syncTimeinToTimeout(timein.value);
+      syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
+      window.main.setAddress(MAIN_PIN_LEFT, MAIN_PIN_TOP, HEIGHT_SMALL_MAIN_PIN / 2);
+      window.form.syncRoomsToGuests(roomsSelect.value);
+      mainPin.style.left = `${MAIN_PIN_LEFT}px`;
+      mainPin.style.top = `${MAIN_PIN_TOP}px`;
+    })
 })();
