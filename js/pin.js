@@ -32,7 +32,7 @@
 
   window.pin = {
     addFragmentOfRenderPins: (arrayOfAds) => {
-      var fragment = document.createDocumentFragment();
+      const fragment = document.createDocumentFragment();
 
       for (let i = 0; i < arrayOfAds.length; i++) {
         if (arrayOfAds[i].offer) {
@@ -43,13 +43,14 @@
       return fragment;
     },
     removePins: () => {
-        const pinn = document.querySelectorAll(`.map__pin`);
-        pinn.forEach(function (item) {
-          if(item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)){
-          item.remove();}
-        })
-        mainPin.style.left = `${MAIN_PIN_LEFT}px`;
-        mainPin.style.top = `${MAIN_PIN_TOP}px`;
+      const pinn = document.querySelectorAll(`.map__pin`);
+      pinn.forEach(function (item) {
+        if (item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)) {
+          item.remove();
+        }
+      });
+      mainPin.style.left = `${MAIN_PIN_LEFT}px`;
+      mainPin.style.top = `${MAIN_PIN_TOP}px`;
     },
 
     moveMainPin: (evt) => {

@@ -14,8 +14,6 @@
   const MAIN_PIN_TOP = mainPin.offsetTop;
   const HEIGHT_SMALL_MAIN_PIN = 62;
 
-
-
   const getOptions = (value) => {
     switch (value) {
       case `1`: return [{
@@ -28,7 +26,7 @@
       }, {
         label: `для 2 гостей`,
         value: 2
-      } ];
+      }];
       case `3`: return [{
         label: `для 1 гостя`,
         value: 1
@@ -145,7 +143,7 @@
         document.body.removeChild(successMessage);
         document.removeEventListener(`mousedown`, setSuccessMassageOnMouseDown);
         document.removeEventListener(`keydown`, setSuccessMessageOnKeydown);
-    });
+      });
     };
 
     document.addEventListener(`keydown`, setSuccessMessageOnKeydown);
@@ -154,7 +152,7 @@
 
   };
 
-  const errorTemplate =  document.querySelector(`#error`).content.querySelector(`.error`);
+  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const main = document.querySelector(`main`);
 
 
@@ -164,19 +162,19 @@
     const btn = document.querySelector(`.error__button`);
 
     window.form.removeErrorMessage = (evt) => {
-     window.utils.isEscEvent(evt, () => {
-       main.removeChild(errorMassage);
-       document.removeEventListener(`keydown`, window.form.removeErrorMessage);
+      window.utils.isEscEvent(evt, () => {
+        main.removeChild(errorMassage);
+        document.removeEventListener(`keydown`, window.form.removeErrorMessage);
       });
     };
 
     document.addEventListener(`keydown`, window.form.removeErrorMessage);
 
-     btn.addEventListener(`mousedown`, function setErrorMassageOnClick (evt) {
+    btn.addEventListener(`mousedown`, function setErrorMassageOnClick(evt) {
       window.utils.isMousedown(evt, () => {
-       main.removeChild(errorMassage);
-       btn.removeEventListener(`mousedown`, setErrorMassageOnClick);
-       document.removeEventListener(`keydown`, window.form.removeErrorMessage);
+        main.removeChild(errorMassage);
+        btn.removeEventListener(`mousedown`, setErrorMassageOnClick);
+        document.removeEventListener(`keydown`, window.form.removeErrorMessage);
       });
     });
   };
@@ -195,14 +193,14 @@
     evt.preventDefault();
   });
 
-    const resetBtn = document.querySelector(`.ad-form__reset`);
-    resetBtn.addEventListener(`click`, () => {
-      adForm.reset();
-      window.form.syncTimeinToTimeout(timein.value);
-      syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
-      window.main.setAddress(MAIN_PIN_LEFT, MAIN_PIN_TOP, HEIGHT_SMALL_MAIN_PIN / 2);
-      window.form.syncRoomsToGuests(roomsSelect.value);
-      mainPin.style.left = `${MAIN_PIN_LEFT}px`;
-      mainPin.style.top = `${MAIN_PIN_TOP}px`;
-    })
+  const resetBtn = document.querySelector(`.ad-form__reset`);
+  resetBtn.addEventListener(`click`, () => {
+    adForm.reset();
+    window.form.syncTimeinToTimeout(timein.value);
+    syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
+    window.main.setAddress(MAIN_PIN_LEFT, MAIN_PIN_TOP, HEIGHT_SMALL_MAIN_PIN / 2);
+    window.form.syncRoomsToGuests(roomsSelect.value);
+    mainPin.style.left = `${MAIN_PIN_LEFT}px`;
+    mainPin.style.top = `${MAIN_PIN_TOP}px`;
+  });
 })();
