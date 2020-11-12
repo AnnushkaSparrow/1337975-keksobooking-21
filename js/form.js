@@ -15,36 +15,23 @@
   const HEIGHT_SMALL_MAIN_PIN = 62;
 
   const getOptions = (value) => {
-    switch (value) {
-      case `1`: return [{
-        label: `для 1 гостя`,
-        value: 1
-      }];
-      case `2`: return [{
-        label: `для 1 гостя`,
-        value: 1
-      }, {
-        label: `для 2 гостей`,
-        value: 2
-      }];
-      case `3`: return [{
-        label: `для 1 гостя`,
-        value: 1
-      }, {
-        label: `для 2 гостей`,
-        value: 2
-      },
-      {
-        label: `для 3 гостей`,
-        value: 3
-      }];
-      case `100`: return [{
+    const arrayOfGuests = [];
+
+    if (Number(value) === 100) {
+      return [{
         label: `не для гостей`,
         value: 0
       }];
-      default: return [];
+    } else {
+      for (let i = 0; i < Number(value); i++) {
+        arrayOfGuests[i] =
+        {label: `для ${i + 1} гостя`,
+          value: `${i + 1}`};
+      }
+      return arrayOfGuests;
     }
   };
+
 
   const getTimeout = (value) => `Выезд до ${value.substring(0, 2)}`;
 
@@ -126,7 +113,7 @@
 
   const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 
-  const setSuccessMassage = () => {
+  const setSuccessMessage = () => {
     const successMessage = successTemplate.cloneNode(true);
     document.body.appendChild(successMessage);
 
@@ -134,20 +121,20 @@
       window.utils.isEscEvent(evt, () => {
         document.body.removeChild(successMessage);
         document.removeEventListener(`keydown`, setSuccessMessageOnKeydown);
-        document.removeEventListener(`mousedown`, setSuccessMassageOnMouseDown);
+        document.removeEventListener(`mousedown`, setSuccessMessageOnMouseDown);
       });
     };
 
-    const setSuccessMassageOnMouseDown = (evt) => {
+    const setSuccessMessageOnMouseDown = (evt) => {
       window.utils.isMousedown(evt, () => {
         document.body.removeChild(successMessage);
-        document.removeEventListener(`mousedown`, setSuccessMassageOnMouseDown);
+        document.removeEventListener(`mousedown`, setSuccessMessageOnMouseDown);
         document.removeEventListener(`keydown`, setSuccessMessageOnKeydown);
       });
     };
 
     document.addEventListener(`keydown`, setSuccessMessageOnKeydown);
-    document.addEventListener(`mousedown`, setSuccessMassageOnMouseDown);
+    document.addEventListener(`mousedown`, setSuccessMessageOnMouseDown);
 
 
   };
@@ -156,24 +143,24 @@
   const main = document.querySelector(`main`);
 
 
-  const setErrorMassage = () => {
-    const errorMassage = errorTemplate.cloneNode(true);
-    main.appendChild(errorMassage);
+  const setErrorMessage = () => {
+    const errorMessage = errorTemplate.cloneNode(true);
+    main.appendChild(errorMessage);
     const btn = document.querySelector(`.error__button`);
 
     window.form.removeErrorMessage = (evt) => {
       window.utils.isEscEvent(evt, () => {
-        main.removeChild(errorMassage);
+        main.removeChild(errorMessage);
         document.removeEventListener(`keydown`, window.form.removeErrorMessage);
       });
     };
 
     document.addEventListener(`keydown`, window.form.removeErrorMessage);
 
-    btn.addEventListener(`mousedown`, function setErrorMassageOnClick(evt) {
+    btn.addEventListener(`mousedown`, function setErrorMessageOnClick(evt) {
       window.utils.isMousedown(evt, () => {
-        main.removeChild(errorMassage);
-        btn.removeEventListener(`mousedown`, setErrorMassageOnClick);
+        main.removeChild(errorMessage);
+        btn.removeEventListener(`mousedown`, setErrorMessageOnClick);
         document.removeEventListener(`keydown`, window.form.removeErrorMessage);
       });
     });
@@ -181,15 +168,15 @@
 
   adForm.addEventListener(`submit`, (evt) => {
     window.upload(new FormData(adForm), () => {
-      window.main.inactivePage();
+      window.main.setInactivePage();
       window.pin.removePins();
       window.card.removeCard();
       adForm.reset();
       window.form.syncRoomsToGuests(roomsSelect.value);
       window.form.syncTimeinToTimeout(timein.value);
       syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
-      setSuccessMassage();
-    }, setErrorMassage);
+      setSuccessMessage();
+    }, setErrorMessage);
     evt.preventDefault();
   });
 

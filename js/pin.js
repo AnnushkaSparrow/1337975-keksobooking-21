@@ -43,8 +43,8 @@
       return fragment;
     },
     removePins: () => {
-      const pinn = document.querySelectorAll(`.map__pin`);
-      pinn.forEach(function (item) {
+      const pins = document.querySelectorAll(`.map__pin`);
+      pins.forEach(function (item) {
         if (item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)) {
           item.remove();
         }

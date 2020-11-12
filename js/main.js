@@ -43,7 +43,7 @@
   const onMainPinEnterPress = (evt) => window.utils.isEnter(evt, setActivePage);
 
   // неактивное состояния
-  window.main.inactivePage = () => {
+  window.main.setInactivePage = () => {
     map.classList.add(`map--faded`);
     adForm.classList.add(`ad-form--disabled`);
     window.utils.setUpAttributes(inputs, `disabled`, `disabled`);
@@ -53,5 +53,5 @@
     mainPin.addEventListener(`keydown`, onMainPinEnterPress);
   };
 
-  window.main.inactivePage();
+  window.main.setInactivePage();
 })();
