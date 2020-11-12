@@ -7,10 +7,12 @@
   const HEIGHT_MAIN_PIN = 84;
   const MAP_COORDINATE_Y_MIN = 130;
   const MAP_COORDINATE_Y_MAX = 630;
+  const mainPin = document.querySelector(`.map__pin--main`);
+  const MAIN_PIN_LEFT = mainPin.offsetLeft;
+  const MAIN_PIN_TOP = mainPin.offsetTop;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const listOfPins = document.querySelector(`.map__pins`);
-  const mainPin = document.querySelector(`.map__pin--main`);
 
   const renderPin = (ad, index, arrayOfAds) => {
     const pin = pinTemplate.cloneNode(true);
@@ -38,8 +40,19 @@
         }
       }
       listOfPins.appendChild(fragment);
-
+      return fragment;
     },
+    removePins: () => {
+      const pins = document.querySelectorAll(`.map__pin`);
+      pins.forEach(function (item) {
+        if (item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)) {
+          item.remove();
+        }
+      });
+      mainPin.style.left = `${MAIN_PIN_LEFT}px`;
+      mainPin.style.top = `${MAIN_PIN_TOP}px`;
+    },
+
     moveMainPin: (evt) => {
       evt.preventDefault();
 
