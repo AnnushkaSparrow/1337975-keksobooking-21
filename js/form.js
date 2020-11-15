@@ -192,7 +192,7 @@
   });
 
   const comparePrices = (filterValue, adValue) => {
-    switch(filterValue) {
+    switch (filterValue) {
       case `low`: return adValue >= 0 && adValue < 10000;
       case `middle`: return adValue >= 10000 && adValue < 50000;
       case `high`: return adValue >= 50000 && adValue < 1000000;
@@ -209,14 +209,18 @@
       return comparePrices(filterValue, adValue);
     }
 
-    return adValue == filterValue;
+    if (key === `rooms` || key === `guests`) {
+      return adValue === Number(filterValue);
+    }
+
+    return adValue === filterValue;
   };
 
   const filterRealty = () => {
     const arrayOfSelect = Array.from(document.querySelectorAll(`.map__filter`));
     const selectFilters = arrayOfSelect.reduce((currentFilters, currentSelect) => {
       if (currentSelect.value !== `any`) {
-        return Object.assign({}, currentFilters, { [currentSelect.name.replace(`housing-`, ``)]: currentSelect.value });
+        return Object.assign({}, currentFilters, {[currentSelect.name.replace(`housing-`, ``)]: currentSelect.value});
       }
 
       return currentFilters;
@@ -224,7 +228,7 @@
 
     const arrayOfCheckbox = Array.from(document.querySelectorAll(`.map__checkbox`));
     const checkboxFilters = arrayOfCheckbox.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
-    const filters = Object.assign({}, selectFilters, checkboxFilters.length > 0 ? { features: checkboxFilters } : {});
+    const filters = Object.assign({}, selectFilters, checkboxFilters.length > 0 ? {features: checkboxFilters} : {});
     const keys = Object.keys(filters);
     const result = window.arrayOfAds.filter((ad) => keys.every((key) => {
       const adValue = ad.offer[key];

@@ -47,7 +47,7 @@
     setAds: (arrayOfAds) => {
 
       window.arrayOfAds = arrayOfAds;
-      window.pin.addFragmentOfRenderPins(window.arrayOfAds, 5);
+      window.pin.addFragmentOfRenderPins(window.arrayOfAds, NUMBER_OF_PINS);
     },
     removePins: () => {
       const pins = document.querySelectorAll(`.map__pin`);
