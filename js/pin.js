@@ -22,6 +22,12 @@
     pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
     pin.addEventListener(`click`, () => {
+      const activePin = document.querySelector(`.map__pin--active`);
+      if (activePin) {
+        activePin.classList.remove(`map__pin--active`);
+      }
+
+      pin.classList.add(`map__pin--active`);
       window.card.removeCard();
       window.card.renderCard(arrayOfAds[index]);
       window.card.onCloseClickPress();
@@ -33,7 +39,13 @@
 
   window.pin = {
     addFragmentOfRenderPins: (arrayOfAds, num) => {
-      listOfPins.innerHTML = ``;
+      // listOfPins.innerHTML = ``;
+      const pins = document.querySelectorAll(`.map__pin`);
+      pins.forEach(function (item) {
+        if (item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)) {
+          item.remove();
+        }
+      });
       const fragment = document.createDocumentFragment();
 
       for (let i = 0; i < num; i++) {
