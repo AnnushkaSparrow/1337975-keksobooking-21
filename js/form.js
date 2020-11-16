@@ -13,6 +13,7 @@
   const MAIN_PIN_LEFT = mainPin.offsetLeft;
   const MAIN_PIN_TOP = mainPin.offsetTop;
   const HEIGHT_SMALL_MAIN_PIN = 62;
+  const DEBOUNCE_INTERVAL = 500; // ms
 
   const getOptions = (value) => {
     const arrayOfGuests = [];
@@ -56,6 +57,18 @@
       optionNodeOfTimeout.setAttribute(`value`, `${fieldTimein}`);
       optionNodeOfTimeout.innerHTML = time;
       timeout.appendChild(optionNodeOfTimeout);
+    },
+    debounce: (cb) => {
+      let lastTimeout = null;
+
+      return (...parameters) => {
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(() => {
+          cb(...parameters);
+        }, DEBOUNCE_INTERVAL);
+      };
     }
   };
 
@@ -216,7 +229,7 @@
     return adValue === filterValue;
   };
 
-  const filterRealty = () => {
+  const filterRealty = window.form.debounce(() => {
     const arraysOfSelect = Array.from(document.querySelectorAll(`.map__filter`));
     const selectFilters = arraysOfSelect.reduce((currentFilters, currentSelect) => {
       if (currentSelect.value !== `any`) {
@@ -241,7 +254,7 @@
     window.pin.addFragmentOfRenderPins(result, result.length);
 
 
-  };
+  });
 
 
   const mapFilter = document.querySelector(`.map__filters-container`);
