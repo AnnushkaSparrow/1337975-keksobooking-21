@@ -217,8 +217,8 @@
   };
 
   const filterRealty = () => {
-    const arrayOfSelect = Array.from(document.querySelectorAll(`.map__filter`));
-    const selectFilters = arrayOfSelect.reduce((currentFilters, currentSelect) => {
+    const arraysOfSelect = Array.from(document.querySelectorAll(`.map__filter`));
+    const selectFilters = arraysOfSelect.reduce((currentFilters, currentSelect) => {
       if (currentSelect.value !== `any`) {
         return Object.assign({}, currentFilters, {[currentSelect.name.replace(`housing-`, ``)]: currentSelect.value});
       }
@@ -226,8 +226,8 @@
       return currentFilters;
     }, {});
 
-    const arrayOfCheckbox = Array.from(document.querySelectorAll(`.map__checkbox`));
-    const checkboxFilters = arrayOfCheckbox.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
+    const arraysOfCheckbox = Array.from(document.querySelectorAll(`.map__checkbox`));
+    const checkboxFilters = arraysOfCheckbox.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
     const filters = Object.assign({}, selectFilters, checkboxFilters.length > 0 ? {features: checkboxFilters} : {});
     const keys = Object.keys(filters);
     const result = window.arrayOfAds.filter((ad) => keys.every((key) => {
