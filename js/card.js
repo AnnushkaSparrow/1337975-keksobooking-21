@@ -77,12 +77,14 @@
       if (popupClose) {
         popupClose.addEventListener(`click`, () => {
           window.card.removeCard();
+          window.utils.removeActiveStyle();
         });
       }
     },
 
     onPopupEscPress: (evt) => {
       window.utils.isEscEvent(evt, window.card.removeCard);
+      window.utils.removeActiveStyle();
     }
   };
 })();
