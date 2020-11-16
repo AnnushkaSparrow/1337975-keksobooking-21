@@ -10,6 +10,7 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const MAIN_PIN_LEFT = mainPin.offsetLeft;
   const MAIN_PIN_TOP = mainPin.offsetTop;
+  const NUMBER_OF_PINS = 5;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const listOfPins = document.querySelector(`.map__pins`);
@@ -31,16 +32,22 @@
   };
 
   window.pin = {
-    addFragmentOfRenderPins: (arrayOfAds) => {
+    addFragmentOfRenderPins: (arrayOfAds, num) => {
+      listOfPins.innerHTML = ``;
       const fragment = document.createDocumentFragment();
 
-      for (let i = 0; i < arrayOfAds.length; i++) {
+      for (let i = 0; i < num; i++) {
         if (arrayOfAds[i].offer) {
           fragment.appendChild(renderPin(arrayOfAds[i], i, arrayOfAds));
+
         }
+        listOfPins.appendChild(fragment);
       }
-      listOfPins.appendChild(fragment);
-      return fragment;
+    },
+    setAds: (arrayOfAds) => {
+
+      window.arrayOfAds = arrayOfAds;
+      window.pin.addFragmentOfRenderPins(window.arrayOfAds, NUMBER_OF_PINS);
     },
     removePins: () => {
       const pins = document.querySelectorAll(`.map__pin`);

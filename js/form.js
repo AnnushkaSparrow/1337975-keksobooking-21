@@ -190,4 +190,60 @@
     mainPin.style.left = `${MAIN_PIN_LEFT}px`;
     mainPin.style.top = `${MAIN_PIN_TOP}px`;
   });
+
+  const comparePrices = (filterValue, adValue) => {
+    switch (filterValue) {
+      case `low`: return adValue >= 0 && adValue < 10000;
+      case `middle`: return adValue >= 10000 && adValue < 50000;
+      case `high`: return adValue >= 50000 && adValue < 1000000;
+      default: return false;
+    }
+  };
+
+  const compareValues = (filterValue, adValue, key) => {
+    if (Array.isArray(adValue) && Array.isArray(filterValue)) {
+      return filterValue.every((value) => adValue.includes(value));
+    }
+
+    if (key === `price`) {
+      return comparePrices(filterValue, adValue);
+    }
+
+    if (key === `rooms` || key === `guests`) {
+      return adValue === Number(filterValue);
+    }
+
+    return adValue === filterValue;
+  };
+
+  const filterRealty = () => {
+    const arraysOfSelect = Array.from(document.querySelectorAll(`.map__filter`));
+    const selectFilters = arraysOfSelect.reduce((currentFilters, currentSelect) => {
+      if (currentSelect.value !== `any`) {
+        return Object.assign({}, currentFilters, {[currentSelect.name.replace(`housing-`, ``)]: currentSelect.value});
+      }
+
+      return currentFilters;
+    }, {});
+
+    const arraysOfCheckbox = Array.from(document.querySelectorAll(`.map__checkbox`));
+    const checkboxFilters = arraysOfCheckbox.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
+    const filters = Object.assign({}, selectFilters, checkboxFilters.length > 0 ? {features: checkboxFilters} : {});
+    const keys = Object.keys(filters);
+    const result = window.arrayOfAds.filter((ad) => keys.every((key) => {
+      const adValue = ad.offer[key];
+      const filterValue = filters[key];
+
+      return compareValues(filterValue, adValue, key);
+    })).slice(0, 5).filter(Boolean);
+
+    window.card.removeCard();
+    window.pin.addFragmentOfRenderPins(result, result.length);
+
+
+  };
+
+
+  const mapFilter = document.querySelector(`.map__filters-container`);
+  mapFilter.addEventListener(`change`, filterRealty);
 })();
