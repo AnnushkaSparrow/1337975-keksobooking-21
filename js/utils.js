@@ -48,13 +48,13 @@
       node.textContent = errorMessage;
       document.body.insertAdjacentElement(`afterbegin`, node);
     },
-    removeActiveStyle : () => {
+    removeActiveStyle: () => {
       const activePin = document.querySelector(`.map__pin--active`);
       if (activePin) {
         activePin.classList.remove(`map__pin--active`);
       }
     },
-    removePins : () => {
+    removePins: () => {
       const pins = document.querySelectorAll(`.map__pin`);
       pins.forEach((item) => {
         if (item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)) {

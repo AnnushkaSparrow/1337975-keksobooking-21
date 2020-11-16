@@ -22,7 +22,7 @@
     pin.style = `left: ${ad.location.x - WIDTH_PIN / 2}px; top: ${ad.location.y - HEIGHT_PIN}px;`;
 
     pin.addEventListener(`click`, () => {
-     window.utils.removeActiveStyle();
+      window.utils.removeActiveStyle();
 
       pin.classList.add(`map__pin--active`);
       window.card.removeCard();
@@ -37,7 +37,7 @@
   window.pin = {
     addFragmentOfRenderPins: (arrayOfAds, num) => {
 
-    window.utils.removePins();
+      window.utils.removePins();
       const fragment = document.createDocumentFragment();
 
       for (let i = 0; i < num; i++) {
