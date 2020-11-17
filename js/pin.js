@@ -7,11 +7,10 @@
   const HEIGHT_MAIN_PIN = 84;
   const MAP_COORDINATE_Y_MIN = 130;
   const MAP_COORDINATE_Y_MAX = 630;
-  const NUMBER_OF_PINS = 5;
   const mainPin = document.querySelector(`.map__pin--main`);
   const MAIN_PIN_LEFT = mainPin.offsetLeft;
   const MAIN_PIN_TOP = mainPin.offsetTop;
-
+  const NUMBER_OF_PINS = 5;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const listOfPins = document.querySelector(`.map__pins`);

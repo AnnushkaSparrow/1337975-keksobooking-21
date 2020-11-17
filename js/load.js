@@ -1,7 +1,7 @@
 'use strict';
 (() => {
   const URL = `https://21.javascript.pages.academy/keksobooking/data`;
-  const statusCode = {
+  const StatusCode = {
     OK: 200
   };
 
@@ -13,7 +13,7 @@
 
 
     xhr.addEventListener(`load`, () => {
-      if (xhr.status === statusCode.OK) {
+      if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
       } else {
         onError(`Статус ответа: ${xhr.status}`);
