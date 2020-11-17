@@ -5,7 +5,7 @@
   const popupPhoto = cardTemplate.querySelector(`.popup__photo`);
   const filters = document.querySelector(`.map__filters-container`);
 
-  const typesOfRealty = {
+  const TypesOfRealty = {
     palace: `Дворец`,
     flat: `Квартира`,
     house: `Дом`,
