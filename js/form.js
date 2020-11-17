@@ -231,8 +231,10 @@
   };
 
   const filterRealty = window.form.debounce(() => {
+
     const arrayOfSelects = Array.from(document.querySelectorAll(`.map__filter`));
     const selectFilters = arrayOfSelects.reduce((currentFilters, currentSelect) => {
+
       if (currentSelect.value !== `any`) {
         return Object.assign({}, currentFilters, {[currentSelect.name.replace(`housing-`, ``)]: currentSelect.value});
       }
