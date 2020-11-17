@@ -233,7 +233,7 @@
   const filterRealty = window.form.debounce(() => {
 
     const arrayOfSelects = Array.from(document.querySelectorAll(`.map__filter`));
-    const selectFilters = arrayOfSelects.reduce((currentFilters, currentSelect) => {
+    const objOfselectFilters = arrayOfSelects.reduce((currentFilters, currentSelect) => {
 
       if (currentSelect.value !== `any`) {
         return Object.assign({}, currentFilters, {[currentSelect.name.replace(`housing-`, ``)]: currentSelect.value});
@@ -244,7 +244,7 @@
 
     const arrayOfCheckboxes = Array.from(document.querySelectorAll(`.map__checkbox`));
     const checkboxFilters = arrayOfCheckboxes.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
-    const filters = Object.assign({}, selectFilters, checkboxFilters.length > 0 ? {features: checkboxFilters} : {});
+    const filters = Object.assign({}, objOfselectFilters, checkboxFilters.length > 0 ? {features: checkboxFilters} : {});
     const keys = Object.keys(filters);
     const results = window.arrayOfAds.filter((ad) => keys.every((key) => {
       const adValue = ad.offer[key];
