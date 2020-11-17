@@ -47,6 +47,20 @@
       node.style.fontSize = `30px`;
       node.textContent = errorMessage;
       document.body.insertAdjacentElement(`afterbegin`, node);
+    },
+    removeActiveStyle: () => {
+      const activePin = document.querySelector(`.map__pin--active`);
+      if (activePin) {
+        activePin.classList.remove(`map__pin--active`);
+      }
+    },
+    removePins: () => {
+      const pins = document.querySelectorAll(`.map__pin`);
+      pins.forEach((item) => {
+        if (item.matches(`.map__pin`) && !item.matches(`.map__pin--main`)) {
+          item.remove();
+        }
+      });
     }
   };
 })();

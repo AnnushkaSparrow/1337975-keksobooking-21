@@ -3,6 +3,8 @@
 (() => {
   const MIN_TITLE_LENGTH = 30;
   const MAX_TITLE_LENGTH = 100;
+  const HEIGHT_SMALL_MAIN_PIN = 62;
+  const DEBOUNCE_INTERVAL = 500; // ms
 
   const roomsSelect = document.querySelector(`#room_number`);
   const guestsSelect = document.querySelector(`#capacity`);
@@ -12,7 +14,7 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const MAIN_PIN_LEFT = mainPin.offsetLeft;
   const MAIN_PIN_TOP = mainPin.offsetTop;
-  const HEIGHT_SMALL_MAIN_PIN = 62;
+
 
   const getOptions = (value) => {
     const arrayOfGuests = [];
@@ -56,6 +58,18 @@
       optionNodeOfTimeout.setAttribute(`value`, `${fieldTimein}`);
       optionNodeOfTimeout.innerHTML = time;
       timeout.appendChild(optionNodeOfTimeout);
+    },
+    debounce: (cb) => {
+      let lastTimeout = null;
+
+      return (...parameters) => {
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(() => {
+          cb(...parameters);
+        }, DEBOUNCE_INTERVAL);
+      };
     }
   };
 
@@ -216,9 +230,9 @@
     return adValue === filterValue;
   };
 
-  const filterRealty = () => {
-    const arraysOfSelect = Array.from(document.querySelectorAll(`.map__filter`));
-    const selectFilters = arraysOfSelect.reduce((currentFilters, currentSelect) => {
+  const filterRealty = window.form.debounce(() => {
+    const arrayOfSelects = Array.from(document.querySelectorAll(`.map__filter`));
+    const selectFilters = arrayOfSelects.reduce((currentFilters, currentSelect) => {
       if (currentSelect.value !== `any`) {
         return Object.assign({}, currentFilters, {[currentSelect.name.replace(`housing-`, ``)]: currentSelect.value});
       }
@@ -226,11 +240,11 @@
       return currentFilters;
     }, {});
 
-    const arraysOfCheckbox = Array.from(document.querySelectorAll(`.map__checkbox`));
-    const checkboxFilters = arraysOfCheckbox.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
+    const arrayOfCheckboxes = Array.from(document.querySelectorAll(`.map__checkbox`));
+    const checkboxFilters = arrayOfCheckboxes.map((checkbox) => checkbox.checked ? checkbox.id.replace(`filter-`, ``) : false).filter(Boolean);
     const filters = Object.assign({}, selectFilters, checkboxFilters.length > 0 ? {features: checkboxFilters} : {});
     const keys = Object.keys(filters);
-    const result = window.arrayOfAds.filter((ad) => keys.every((key) => {
+    const results = window.arrayOfAds.filter((ad) => keys.every((key) => {
       const adValue = ad.offer[key];
       const filterValue = filters[key];
 
@@ -238,10 +252,10 @@
     })).slice(0, 5).filter(Boolean);
 
     window.card.removeCard();
-    window.pin.addFragmentOfRenderPins(result, result.length);
+    window.pin.addFragmentOfRenderPins(results, results.length);
 
 
-  };
+  });
 
 
   const mapFilter = document.querySelector(`.map__filters-container`);
