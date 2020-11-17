@@ -12,8 +12,8 @@
   const timein = document.querySelector(`#timein`);
   const adForm = document.querySelector(`.ad-form`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  const MAIN_PIN_LEFT = mainPin.offsetLeft;
-  const MAIN_PIN_TOP = mainPin.offsetTop;
+  const mainPinLeft = mainPin.offsetLeft;
+  const mainPinTop = mainPin.offsetTop;
 
 
   const getOptions = (value) => {
@@ -199,10 +199,10 @@
     adForm.reset();
     window.form.syncTimeinToTimeout(timein.value);
     syncTypeOfRealtyToMinPrice(selectionOfTypeOfRealty.value);
-    window.main.setAddress(MAIN_PIN_LEFT, MAIN_PIN_TOP, HEIGHT_SMALL_MAIN_PIN / 2);
+    window.main.setAddress(mainPinLeft, mainPinTop, HEIGHT_SMALL_MAIN_PIN / 2);
     window.form.syncRoomsToGuests(roomsSelect.value);
-    mainPin.style.left = `${MAIN_PIN_LEFT}px`;
-    mainPin.style.top = `${MAIN_PIN_TOP}px`;
+    mainPin.style.left = `${mainPinLeft}px`;
+    mainPin.style.top = `${mainPinTop}px`;
   });
 
   const comparePrices = (filterValue, adValue) => {
