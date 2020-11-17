@@ -2,7 +2,7 @@
 (() => {
   const URL = `https://21.javascript.pages.academy/keksobooking`;
 
-  window.upload = function (data, onSuccess, onError) {
+  window.upload = (data, onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
