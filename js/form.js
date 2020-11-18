@@ -17,7 +17,7 @@
 
 
   const getOptions = (value) => {
-        switch (value) {
+    switch (value) {
       case `1`: return [{
         label: `для 1 гостя`,
         value: 1
@@ -41,7 +41,7 @@
         value: 3
       }];
       case `100`: return [{
-       label: `не для гостей`,
+        label: `не для гостей`,
         value: 0
       }];
       default: return [];
@@ -221,11 +221,15 @@
     mainPin.style.left = `${mainPinLeft}px`;
     mainPin.style.top = `${mainPinTop}px`;
 
-    const filtersOption = document.querySelectorAll('.map__filter option');
-    filtersOption.forEach((element, index) => {filtersOption[index].selected = filtersOption[index].defaultSelected});
+    const filtersOption = document.querySelectorAll(`.map__filter option`);
+    filtersOption.forEach((element, index) => {
+      filtersOption[index].selected = filtersOption[index].defaultSelected;
+    });
 
-    const checkboxes = document.querySelectorAll(".map__checkbox");
-    checkboxes.forEach((element, index) => {checkboxes[index].checked = false;});
+    const checkboxes = document.querySelectorAll(`.map__checkbox`);
+    checkboxes.forEach((element, index) => {
+      checkboxes[index].checked = false;
+    });
     window.utils.removePins();
     window.card.removeCard();
     window.main.setInactivePage();
