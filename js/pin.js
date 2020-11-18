@@ -8,6 +8,7 @@
   const MAP_COORDINATE_Y_MIN = 130;
   const MAP_COORDINATE_Y_MAX = 630;
   const NUMBER_OF_PINS = 5;
+
   const mainPin = document.querySelector(`.map__pin--main`);
   const mainPinLeft = mainPin.offsetLeft;
   const mainPinTop = mainPin.offsetTop;
@@ -82,7 +83,7 @@
         const coordsOfMainPinX = (mainPin.offsetLeft - shift.x) + WIDTH_MAIN_PIN / 2;
         const coordsOfMainPinY = (mainPin.offsetTop - shift.y) + HEIGHT_MAIN_PIN;
 
-        if ((coordsOfMainPinX >= 0 && coordsOfMainPinX < document.querySelector(`.map`).offsetWidth) && (coordsOfMainPinY > MAP_COORDINATE_Y_MIN && coordsOfMainPinY < MAP_COORDINATE_Y_MAX)) {
+        if ((coordsOfMainPinX >= 0 && coordsOfMainPinX < document.querySelector(`.map`).offsetWidth) && (coordsOfMainPinY >= MAP_COORDINATE_Y_MIN && coordsOfMainPinY <= MAP_COORDINATE_Y_MAX)) {
 
           mainPin.style.left = `${mainPin.offsetLeft - shift.x}px`;
           mainPin.style.top = `${mainPin.offsetTop - shift.y}px`;

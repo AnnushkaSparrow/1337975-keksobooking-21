@@ -12,8 +12,8 @@
   const address = document.querySelector(`#address`);
   const roomsSelect = document.querySelector(`#room_number`);
   const timein = document.querySelector(`#timein`);
-  const MAIN_PIN_LEFT = mainPin.offsetLeft;
-  const MAIN_PIN_TOP = mainPin.offsetTop;
+  const mainPinLeft = mainPin.offsetLeft;
+  const mainPinTop = mainPin.offsetTop;
 
   window.main = {
     setAddress: (x, y, height = HEIGHT_MAIN_PIN, width = WIDTH_MAIN_PIN / 2) => address.setAttribute(`value`, `${x + width}, ${y + height}`)
@@ -29,7 +29,7 @@
     mainPin.removeEventListener(`keydown`, onMainPinEnterPress);
     document.removeEventListener(`keydown`, window.form.removeMessage);
     mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
-    window.main.setAddress(mainPin.offsetLeft, mainPin.offsetTop);
+    window.main.setAddress(mainPinLeft, mainPinTop);
     roomsSelect.addEventListener(`change`, (evt) => {
       const value = evt.target.value;
       roomsSelect.value = value;
@@ -48,7 +48,7 @@
     adForm.classList.add(`ad-form--disabled`);
     window.utils.setUpAttributes(inputs, `disabled`, `disabled`);
     window.utils.setUpAttributes(selects, `disabled`, `disabled`);
-    window.main.setAddress(MAIN_PIN_LEFT, MAIN_PIN_TOP, HEIGHT_SMALL_MAIN_PIN / 2);
+    window.main.setAddress(mainPinLeft, mainPinTop, HEIGHT_SMALL_MAIN_PIN / 2);
     mainPin.addEventListener(`mousedown`, onMousedownPressToActivePage);
     mainPin.addEventListener(`keydown`, onMainPinEnterPress);
   };

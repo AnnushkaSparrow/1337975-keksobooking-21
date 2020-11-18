@@ -17,20 +17,34 @@
 
 
   const getOptions = (value) => {
-    const arrayOfGuests = [];
-
-    if (Number(value) === 100) {
-      return [{
-        label: `не для гостей`,
+        switch (value) {
+      case `1`: return [{
+        label: `для 1 гостя`,
+        value: 1
+      }];
+      case `2`: return [{
+        label: `для 1 гостя`,
+        value: 1
+      }, {
+        label: `для 2 гостей`,
+        value: 2
+      }];
+      case `3`: return [{
+        label: `для 1 гостя`,
+        value: 1
+      }, {
+        label: `для 2 гостей`,
+        value: 2
+      },
+      {
+        label: `для 3 гостей`,
+        value: 3
+      }];
+      case `100`: return [{
+       label: `не для гостей`,
         value: 0
       }];
-    } else {
-      for (let i = 0; i < Number(value); i++) {
-        arrayOfGuests[i] =
-        {label: `для ${i + 1} гостя`,
-          value: `${i + 1}`};
-      }
-      return arrayOfGuests;
+      default: return [];
     }
   };
 
@@ -92,7 +106,7 @@
 
   title.addEventListener(`input`, validateOfNumberOfSimbols);
 
-  const minPriceOfRealty = {
+  const MinPriceOfRealty = {
     bungalow: 0,
     flat: 1000,
     house: 5000,
@@ -103,7 +117,7 @@
   const selectionOfTypeOfRealty = document.querySelector(`#type`);
 
   const syncTypeOfRealtyToMinPrice = (types) => {
-    const minPrice = minPriceOfRealty[types];
+    const minPrice = MinPriceOfRealty[types];
     price.value = minPrice;
     price.setAttribute(`placeholder`, minPrice);
     price.setAttribute(`min`, minPrice);
@@ -171,13 +185,16 @@
 
     document.addEventListener(`keydown`, window.form.removeErrorMessage);
 
-    btn.addEventListener(`mousedown`, function setErrorMessageOnClick(evt) {
+
+    const setErrorMessageOnClick = (evt) => {
       window.utils.isMousedown(evt, () => {
         main.removeChild(errorMessage);
         btn.removeEventListener(`mousedown`, setErrorMessageOnClick);
         document.removeEventListener(`keydown`, window.form.removeErrorMessage);
       });
-    });
+    };
+
+    btn.addEventListener(`mousedown`, setErrorMessageOnClick);
   };
 
   adForm.addEventListener(`submit`, (evt) => {
@@ -203,6 +220,16 @@
     window.form.syncRoomsToGuests(roomsSelect.value);
     mainPin.style.left = `${mainPinLeft}px`;
     mainPin.style.top = `${mainPinTop}px`;
+
+    const filtersOption = document.querySelectorAll('.map__filter option');
+    filtersOption.forEach((element, index) => {filtersOption[index].selected = filtersOption[index].defaultSelected});
+
+    const checkboxes = document.querySelectorAll(".map__checkbox");
+    checkboxes.forEach((element, index) => {checkboxes[index].checked = false;});
+    window.utils.removePins();
+    window.card.removeCard();
+    window.main.setInactivePage();
+
   });
 
   const comparePrices = (filterValue, adValue) => {
